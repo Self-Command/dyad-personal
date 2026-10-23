@@ -396,7 +396,9 @@ export function ModelPicker() {
   } = useLanguageModelProviders();
 
   const loading = modelsByProvidersLoading || providersLoading;
-  const dyadProEnabled = settings ? !settings.enablePersonalMode && isDyadProEnabled(settings) : false;
+  const dyadProEnabled = settings
+    ? !settings.enablePersonalMode && isDyadProEnabled(settings)
+    : false;
   // Ollama Models Hook
   const {
     models: ollamaModels,

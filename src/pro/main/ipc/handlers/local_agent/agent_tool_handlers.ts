@@ -48,7 +48,8 @@ export function registerAgentToolHandlers() {
     return TOOL_DEFINITIONS.filter(
       (tool) =>
         (!settings.enablePersonalMode || !tool.usesEngineEndpoint) &&
-        ((!settings.enablePersonalMode && isDyadProEnabled(settings)) || !tool.subagentOnly),
+        ((!settings.enablePersonalMode && isDyadProEnabled(settings)) ||
+          !tool.subagentOnly),
     ).map((tool) => ({
       name: tool.name,
       description: resolveToolDescription(tool, descriptionContext),

@@ -7,7 +7,9 @@ export function ReleaseChannelSelector() {
       label="Release channel"
       description="This independent distribution uses personal version tags. Official stable and beta update feeds do not apply."
     >
-      <span id="personal-release-channel" className="text-sm">Personal</span>
+      <span id="personal-release-channel" className="text-sm">
+        Personal
+      </span>
     </SettingField>
   );
 }

@@ -127,9 +127,21 @@ describe("buildMcpAutoApprove", () => {
   });
 
   it("allows opted-in Personal classification without claiming Pro and keeps disabled consent manual", () => {
-    const params = { ...baseParams, isDyadPro: false, settings: { enablePersonalMode: true, autoApproveSafeMcpTools: true } as any };
+    const params = {
+      ...baseParams,
+      isDyadPro: false,
+      settings: {
+        enablePersonalMode: true,
+        autoApproveSafeMcpTools: true,
+      } as any,
+    };
     expect(buildMcpAutoApprove(params)).toEqual(expect.any(Function));
-    expect(buildMcpAutoApprove({ ...params, settings: { ...params.settings, autoApproveSafeMcpTools: false } })).toBeUndefined();
+    expect(
+      buildMcpAutoApprove({
+        ...params,
+        settings: { ...params.settings, autoApproveSafeMcpTools: false },
+      }),
+    ).toBeUndefined();
   });
 
   it("builds an auto-approve callback for Pro non-free turns when enabled", () => {

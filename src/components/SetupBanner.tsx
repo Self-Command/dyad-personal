@@ -115,8 +115,9 @@ export function SetupBanner({
         <h2 className="text-xl font-semibold">Connect your own AI model</h2>
         <p className="mt-2 text-sm text-muted-foreground">
           Personal mode uses your API key, Ollama, LM Studio, or a self-hosted
-          OpenAI-compatible endpoint. Configure a provider, then choose its model.
-          Model requests and safety reviews follow that provider's pricing.
+          OpenAI-compatible endpoint. Configure a provider, then choose its
+          model. Model requests and safety reviews follow that provider's
+          pricing.
         </p>
         <Button className="mt-4" onClick={handleOtherProvidersClick}>
           Configure model providers

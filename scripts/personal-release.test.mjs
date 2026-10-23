@@ -184,14 +184,20 @@ test("a partial upload stays private and a retry reuses matching assets without 
       }
       return fake.fetchImpl(url, options);
     };
-    await assert.rejects(publishRelease({ ...setup, fetchImpl: failOnce }), /Upload failed/);
+    await assert.rejects(
+      publishRelease({ ...setup, fetchImpl: failOnce }),
+      /Upload failed/,
+    );
     assert.equal(fake.state.release.draft, true);
     assert.equal(fake.state.assets.length, 2);
     assert.equal(fake.state.publishes, 0);
     await publishRelease({ ...setup, fetchImpl: fake.fetchImpl });
     assert.equal(fake.state.creates, 1);
     assert.equal(fake.state.assets.length, 15);
-    assert.equal(new Set(fake.state.assets.map((asset) => asset.name)).size, 15);
+    assert.equal(
+      new Set(fake.state.assets.map((asset) => asset.name)).size,
+      15,
+    );
     assert.equal(fake.state.publishes, 1);
   } finally {
     await rm(setup.root, { force: true, recursive: true });

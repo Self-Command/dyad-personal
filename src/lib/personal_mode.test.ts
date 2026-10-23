@@ -30,7 +30,9 @@ describe("independent personal capabilities", () => {
   it("does not label a self-funded OpenAI model as using a connected subscription", () => {
     const model = { provider: "openai", name: "user-model" };
     const account = { connected: true, models: ["user-model"] };
-    expect(usesChatGPTSubscription(model, { enablePersonalMode: true }, account)).toBe(false);
+    expect(
+      usesChatGPTSubscription(model, { enablePersonalMode: true }, account),
+    ).toBe(false);
     expect(usesChatGPTSubscription(model, {}, account)).toBe(true);
   });
   it("never claims an official subscription or consumes Basic Agent admissions", () => {

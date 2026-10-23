@@ -51,9 +51,9 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Formatting and lint
         run: |
-          npm run fmt
-          git diff > formatting.patch
+          npm run fmt:check
           npm run lint
+          git diff --exit-code
       - name: Type checks
         if: ${{ !cancelled() && steps.deps.outcome == 'success' }}
         run: npm run ts
@@ -85,8 +85,13 @@ jobs:
           src/pro/main/ipc/handlers/local_agent/mcp_auto_consent.spec.ts
           src/testing/personal_chat_flow.test.ts
           src/testing/chat_flow_harness.smoke.test.ts
+      - name: Prepare a cloud formatting patch on failure
+        if: ${{ failure() && steps.deps.outcome == 'success' }}
+        run: |
+          npm run fmt
+          git diff > formatting.patch
       - name: Save cloud formatter changes
-        if: always()
+        if: failure()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: formatting-patch
@@ -94,6 +99,7 @@ jobs:
           if-no-files-found: ignore
 
   build:
+    if: github.event_name != 'push' || startsWith(github.ref, 'refs/tags/v')
     needs: verify
     timeout-minutes: 60
     strategy:

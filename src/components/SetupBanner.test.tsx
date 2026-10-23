@@ -94,9 +94,15 @@ function setup() {
 it("guides Personal users directly to their own model provider without official checkout", async () => {
   mocks.personal = true;
   const user = setup();
-  expect(screen.queryByText("Start free Dyad Pro trial")).not.toBeInTheDocument();
-  expect(screen.queryByRole("button", { name: /ChatGPT subscription/ })).not.toBeInTheDocument();
-  await user.click(screen.getByRole("button", { name: "Configure model providers" }));
+  expect(
+    screen.queryByText("Start free Dyad Pro trial"),
+  ).not.toBeInTheDocument();
+  expect(
+    screen.queryByRole("button", { name: /ChatGPT subscription/ }),
+  ).not.toBeInTheDocument();
+  await user.click(
+    screen.getByRole("button", { name: "Configure model providers" }),
+  );
   expect(mocks.navigate).toHaveBeenCalled();
   expect(mocks.connect).not.toHaveBeenCalled();
 });

@@ -16,7 +16,9 @@ export function useFreeModelQuota({
   const { settings } = useSettings();
   const queryClient = useQueryClient();
   const { userBudget, isLoadingUserBudget } = useUserBudgetInfo({ enabled });
-  const isPro = settings ? !settings.enablePersonalMode && isDyadProEnabled(settings) : false;
+  const isPro = settings
+    ? !settings.enablePersonalMode && isDyadProEnabled(settings)
+    : false;
   const isTrial = userBudget?.isTrial === true;
   const isTestMode = settings?.isTestMode ?? false;
 

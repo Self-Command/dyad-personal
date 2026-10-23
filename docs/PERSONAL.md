@@ -35,7 +35,7 @@ npm start
 
 `.github/workflows/release.yml`：
 
-- 推送 `personal/**` 分支：在云端安装依赖、actionlint 校验工作流、格式检查、lint、tsgo/worker 类型检查、回归测试，随后构建四个目标；Linux 打包后通过 Playwright/Xvfb 启动真实应用验证窗口、渲染器、版本和数据目录。
+- 推送 `personal/**` 分支：在云端安装依赖、actionlint 校验工作流、严格格式检查、lint、tsgo/worker 类型检查、回归测试。分支提交仅检查；标签或手动触发才构建四个目标。Linux 打包后通过 Playwright/Xvfb 的渲染器 CDP 启动真实正式应用验证窗口、IPC、版本和独立设置目录，不开启 Node 调试安全开关。
 - 推送 `vX.Y.Z-personal.N` 标签：相同检查全部通过后，合并四平台产物、创建草稿 Release、逐个流式上传并核对 GitHub 返回的 SHA256/字节数，完整复核后才公开 Release。package.json/package-lock.json 版本必须与标签一致。
 - 可用 workflow_dispatch 手动验证当前 ref；只有标签 ref 才公开发行。仅分支构建不会发布 Release。
 - Windows 使用 windows-2022 x64，Linux 使用 ubuntu-22.04 x64，macOS Intel 使用 macos-26-intel，Apple Silicon 使用 macos-latest arm64。未宣称支持 Windows/Linux ARM，因为上游 AppImage/native 构建尚未覆盖。
@@ -56,6 +56,10 @@ git push origin v1.20.0-personal.2
 ## 实际验收记录
 
 实际结果以本仓库 Actions 的 job、测试输出和 Releases 资产为准。未执行本机构建，不将 mock 发布回归测试当成真实远端发布成功。代码中 `scripts/personal-release.test.mjs` 用 fake GitHub 覆盖：精确标签、401、四目标集合、文件校验、草稿恢复、已发布版本保护和标签移动保护。源码测试覆盖独立订阅判断、直连模型、辅助模型、Shell 能力边界和逐次确认。
+
+2026-10-24，首轮四平台完整构建在 [Actions run 39993229641](https://github.com/Self-Command/dyad-personal/actions/runs/39993229641) 全部通过，Linux 正式包成功启动并完成真实渲染器与 IPC 检查；随后新增的首次使用引导、官方账号隔离、Host/Cloud 边界回归也通过云端 verify。最终发行以 `v1.20.0-personal.1` 标签的完整流水线为准。没有调用用户真实模型 API，本期模型调用验证使用自定义 HTTP 假服务及真实 IPC/文件/Git/数据库调用链。原始未修改版没有单独启动验收，不将个人版启动结果冒充原版结果。
+
+已保留上游 `dyad://` OAuth 深链兼容性；在同一电脑安装官方版和个人版时，系统可能把该协议交给最后注册的版本。两者的数据和项目目录独立，但登录回调应在需要的版本内发起。
 
 ## 许可证
 
