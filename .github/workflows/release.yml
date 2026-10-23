@@ -65,10 +65,13 @@ jobs:
           src/lib/auxiliaryModel.test.ts
           src/shared/shell_capability.test.ts
           src/lib/settingsSearchIndex.test.ts
+          src/lib/subscriptionModels.test.ts
+          src/hooks/useLanguageModelProviders.test.ts
           src/components/ShellExperimentSwitch.test.tsx
           src/main/settings.test.ts
           src/ipc/utils/get_model_client.test.ts
           src/ipc/services/subscription_turn_preflight.test.ts
+          src/ipc/services/app_runtime_service.test.ts
           src/pro/main/ipc/handlers/local_agent/tool_safety_reviewer.test.ts
           src/pro/main/ipc/handlers/local_agent/shell_review.test.ts
           src/pro/main/ipc/handlers/local_agent/tools/run_shell.spec.ts

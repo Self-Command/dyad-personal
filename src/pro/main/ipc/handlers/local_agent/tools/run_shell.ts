@@ -140,7 +140,8 @@ export const runShellTool: ToolDefinition<z.infer<typeof schema>> = {
     if (decision.decision === "block") return blocked(decision.reason);
     const approved = await ctx.requireConsent({
       toolName: "run_shell",
-      ...(readSettings().enablePersonalMode || ctx.inferenceSettings?.enablePersonalMode ||
+      ...(readSettings().enablePersonalMode ||
+      ctx.inferenceSettings?.enablePersonalMode ||
       decision.decision === "ask"
         ? { confirmation: "shell-approval" as const }
         : {}),

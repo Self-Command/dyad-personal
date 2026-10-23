@@ -19,9 +19,14 @@ import { DyadError, DyadErrorKind } from "@/errors/dyad_error";
 
 describe("engineFetch", () => {
   it("refuses official endpoint access in Personal mode even with a real saved key", async () => {
-    mocks.readSettings.mockReturnValue({ enablePersonalMode: true, providerSettings: { auto: { apiKey: { value: "saved-official-key" } } } });
+    mocks.readSettings.mockReturnValue({
+      enablePersonalMode: true,
+      providerSettings: { auto: { apiKey: { value: "saved-official-key" } } },
+    });
     const fetchMock = vi.spyOn(globalThis, "fetch");
-    await expect(engineFetch({ dyadRequestId: "personal" }, "/tools/web-search")).rejects.toThrow("Official Engine tools are unavailable");
+    await expect(
+      engineFetch({ dyadRequestId: "personal" }, "/tools/web-search"),
+    ).rejects.toThrow("Official Engine tools are unavailable");
     expect(fetchMock).not.toHaveBeenCalled();
   });
   beforeEach(() => {

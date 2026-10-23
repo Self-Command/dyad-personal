@@ -53,10 +53,11 @@ export function isChatGPTAutoSelection(
 /** Use the effective account catalog shared by picker status and backend routing. */
 export function usesChatGPTSubscription(
   model: Pick<LargeLanguageModel, "provider" | "name">,
-  settings: Pick<UserSettings, "proModelUsage">,
+  settings: Pick<UserSettings, "proModelUsage" | "enablePersonalMode">,
   subscription: { connected: boolean; models: string[] },
 ): boolean {
   return Boolean(
+    !settings.enablePersonalMode &&
     settings.proModelUsage !== "pro" &&
     settings.proModelUsage !== "api-key" &&
     subscription.connected &&

@@ -510,7 +510,7 @@ describe("spawn_agent schema", () => {
         followupTaskTool,
       ].every((tool) => tool.subagentOnly),
     ).toBe(true);
-      expect(exploreCodeTool.subagentOnly).not.toBe(true);
+    expect(exploreCodeTool.subagentOnly).not.toBe(true);
     expect(spawnAgentTool.mutationTracking).toBe("none");
     expect(spawnAgentTool.requiresBlueprintApproval).toBe(false);
     expect(spawnAgentTool.usesEngineEndpoint).toBe(true);

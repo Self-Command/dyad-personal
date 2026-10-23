@@ -35,6 +35,7 @@ export function useLanguageModelProviders() {
   const isAnyProviderSetup = () => {
     if (
       settings &&
+      !settings.enablePersonalMode &&
       !subscription.data?.pending &&
       !subscription.data?.setupError &&
       (usesChatGPTSubscription(

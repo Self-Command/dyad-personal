@@ -1,7 +1,11 @@
 import { fireEvent, render, screen, cleanup } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ShellExperimentSwitch } from "./ShellExperimentSwitch";
-const mocks = vi.hoisted(() => ({ pro: true, personal: false, updateSettings: vi.fn() }));
+const mocks = vi.hoisted(() => ({
+  pro: true,
+  personal: false,
+  updateSettings: vi.fn(),
+}));
 vi.mock("@/hooks/useSettings", () => ({
   useSettings: () => ({
     settings: {
@@ -38,8 +42,12 @@ describe("Shell experiment", () => {
     mocks.personal = true;
     render(<ShellExperimentSwitch />);
     fireEvent.click(screen.getByRole("switch", { name: "Shell tool" }));
-    expect(mocks.updateSettings).toHaveBeenCalledWith({ enableShellTool: true });
-    expect(screen.getByText(/Personal mode reviews commands/).textContent).toContain("asks for approval every time");
+    expect(mocks.updateSettings).toHaveBeenCalledWith({
+      enableShellTool: true,
+    });
+    expect(
+      screen.getByText(/Personal mode reviews commands/).textContent,
+    ).toContain("asks for approval every time");
   });
 });
 

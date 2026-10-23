@@ -10,7 +10,7 @@ export function useTrialModelRestriction() {
   const { settings, updateSettings } = useSettings();
 
   const isTrial =
-    (userBudget?.isTrial && settings && isDyadProEnabled(settings)) ?? false;
+    (userBudget?.isTrial && settings && !settings.enablePersonalMode && isDyadProEnabled(settings)) ?? false;
   const isOnAutoModel =
     settings?.selectedModel?.provider === "auto" &&
     settings?.selectedModel?.name === "auto";

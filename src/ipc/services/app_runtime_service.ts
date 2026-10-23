@@ -395,6 +395,12 @@ export async function executeApp({
   };
   previewAbortSignal?.throwIfAborted();
   const runtimeMode = settings.runtimeMode2 ?? "host";
+  if (settings.enablePersonalMode && runtimeMode === "cloud") {
+    throw new DyadError(
+      "Personal mode uses Host or Docker. Change the runtime in Settings, or disable Personal mode before using the official cloud sandbox.",
+      DyadErrorKind.Precondition,
+    );
+  }
 
   if (runtimeMode === "docker") {
     await executeAppInDocker({

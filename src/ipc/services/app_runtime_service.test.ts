@@ -369,6 +369,12 @@ describe("executeApp", () => {
     );
   });
 
+  it("rejects a saved official cloud runtime in Personal mode before starting processes", async () => {
+    readSettingsMock.mockReturnValue({ enablePersonalMode: true, runtimeMode2: "cloud" });
+    await expect(executeApp({ appPath: "/tmp/app", appId: 1, output: createOutput(), isNeon: false })).rejects.toThrow("Personal mode uses Host or Docker");
+    expect(spawnMock).not.toHaveBeenCalled();
+  });
+
   it("emits app-exit when the current process closes", async () => {
     const process = new FakeChildProcess(101);
     spawnMock.mockReturnValueOnce(process);

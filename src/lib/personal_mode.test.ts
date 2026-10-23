@@ -8,6 +8,7 @@ import {
 import { isShellExperimentAvailable } from "@/shared/shell_capability";
 import { getAuxiliarySettings } from "./auxiliaryModel";
 import { resolveSubscriptionModel } from "@/ipc/services/resolve_subscription_model";
+import { usesChatGPTSubscription } from "./subscriptionModels";
 
 const mocks = vi.hoisted(() => ({ providers: vi.fn(), subscription: vi.fn() }));
 vi.mock("@/ipc/shared/language_model_helpers", () => ({
@@ -26,6 +27,12 @@ const settings = {
 } as UserSettings;
 
 describe("independent personal capabilities", () => {
+  it("does not label a self-funded OpenAI model as using a connected subscription", () => {
+    const model = { provider: "openai", name: "user-model" };
+    const account = { connected: true, models: ["user-model"] };
+    expect(usesChatGPTSubscription(model, { enablePersonalMode: true }, account)).toBe(false);
+    expect(usesChatGPTSubscription(model, {}, account)).toBe(true);
+  });
   it("never claims an official subscription or consumes Basic Agent admissions", () => {
     expect(isPersonalMode(settings)).toBe(true);
     expect(isDyadProEnabled(settings)).toBe(false);
@@ -39,7 +46,12 @@ describe("independent personal capabilities", () => {
     "routes %s directly without consulting official subscription services",
     async (provider) => {
       const model = await resolveSubscriptionModel(
-        { provider, name: "my-model", connection: "pro", effortLevel: "medium" },
+        {
+          provider,
+          name: "my-model",
+          connection: "pro",
+          effortLevel: "medium",
+        },
         { ...settings, enableDyadPro: true },
       );
       expect(model.connection).toBe("api-key");
