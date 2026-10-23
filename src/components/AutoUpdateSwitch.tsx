@@ -6,10 +6,15 @@ export function AutoUpdateSwitch() {
       Personal builds update manually from{" "}
       <button
         className="underline"
-        onClick={() => ipc.system.openExternalUrl("https://github.com/Self-Command/dyad-personal/releases")}
+        onClick={() =>
+          ipc.system.openExternalUrl(
+            "https://github.com/Self-Command/dyad-personal/releases",
+          )
+        }
       >
         Personal Releases
-      </button>.
+      </button>
+      .
     </div>
   );
 }

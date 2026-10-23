@@ -62,13 +62,13 @@ jobs:
           src/shared/shell_capability.test.ts
           src/main/settings.test.ts
           src/ipc/utils/get_model_client.test.ts
-          src/ipc/services/resolve_subscription_model.test.ts
           src/ipc/services/subscription_turn_preflight.test.ts
           src/pro/main/ipc/handlers/local_agent/tool_safety_reviewer.test.ts
           src/pro/main/ipc/handlers/local_agent/tools/run_shell.spec.ts
           src/pro/main/ipc/handlers/local_agent/tools/shell_process.test.ts
           src/pro/main/ipc/handlers/local_agent/tools/shell_process_windows.test.ts
           src/pro/main/ipc/handlers/local_agent/tools/subagent_tool_set.spec.ts
+          src/pro/main/ipc/handlers/local_agent/tools/engine_fetch.test.ts
           src/pro/main/ipc/handlers/local_agent/mcp_auto_consent.spec.ts
       - name: Save formatter patch if needed
         if: failure()
@@ -111,7 +111,14 @@ jobs:
         if: matrix.platform == 'linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y rpm squashfs-tools clang-18
+          sudo apt-get install -y rpm squashfs-tools
+          sudo install -d -m 0755 /etc/apt/keyrings
+          wget -qO /tmp/llvm-snapshot.gpg.key https://apt.llvm.org/llvm-snapshot.gpg.key
+          gpg --dearmor /tmp/llvm-snapshot.gpg.key
+          sudo install -m 0644 /tmp/llvm-snapshot.gpg.key.gpg /etc/apt/keyrings/apt.llvm.org.gpg
+          echo "deb [signed-by=/etc/apt/keyrings/apt.llvm.org.gpg] https://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main" | sudo tee /etc/apt/sources.list.d/llvm-toolchain-jammy-18.list
+          sudo apt-get update -o Dir::Etc::sourcelist="sources.list.d/llvm-toolchain-jammy-18.list" -o Dir::Etc::sourceparts="-" -o APT::Get::List-Cleanup="0"
+          sudo apt-get install -y clang-18
           echo "CC=clang-18" >> "$GITHUB_ENV"
           echo "CXX=clang++-18" >> "$GITHUB_ENV"
       - run: npm install -g npm@11.8.0

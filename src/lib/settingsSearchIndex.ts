@@ -77,7 +77,8 @@ export const SETTINGS_SEARCH_INDEX: SearchableSettingItem[] = [
   {
     id: SETTING_IDS.personalMode,
     label: "Personal mode",
-    description: "Run the local agent, code explorer and reviewed shell with your own API or self-hosted models",
+    description:
+      "Run the local agent, code explorer and reviewed shell with your own API or self-hosted models",
     keywords: ["personal", "local", "api", "self-hosted", "shell"],
     sectionId: SECTION_IDS.providers,
     sectionLabel: "Model Providers",

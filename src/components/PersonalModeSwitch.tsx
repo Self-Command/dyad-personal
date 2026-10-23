@@ -11,17 +11,21 @@ export function PersonalModeSwitch() {
           id="personal-mode"
           aria-label="Personal mode"
           checked={!!settings?.enablePersonalMode}
-          onCheckedChange={(checked) => updateSettings({ enablePersonalMode: checked })}
+          onCheckedChange={(checked) =>
+            updateSettings({ enablePersonalMode: checked })
+          }
         />
-        <Label htmlFor="personal-mode">Personal mode (your API / local models)</Label>
+        <Label htmlFor="personal-mode">
+          Personal mode (your API / local models)
+        </Label>
       </div>
       <p className="text-sm text-muted-foreground">
         Local Agent, TypeScript code exploration, and optional Shell use your
         configured model provider directly. Add your API key or a custom
         OpenAI-compatible endpoint in Model Providers, then select that model.
         Shell requires a fresh approval for every command. Official Engine tools
-        and subscription transports are unavailable while this mode is on.
-        Your provider may charge for model requests, including safety reviews.
+        and subscription transports are unavailable while this mode is on. Your
+        provider may charge for model requests, including safety reviews.
       </p>
     </div>
   );

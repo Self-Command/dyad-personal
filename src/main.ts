@@ -1,7 +1,6 @@
 import { stopClaudeProcesses } from "./ipc/services/claude_code/runtime";
 import {
   app,
-  autoUpdater,
   BrowserWindow,
   dialog,
   Menu,
@@ -634,7 +633,9 @@ export async function onReady() {
   });
 
   // This independent distribution must never install upstream binaries.
-  logger.info("Personal builds update manually from Self-Command/dyad-personal Releases.");
+  logger.info(
+    "Personal builds update manually from Self-Command/dyad-personal Releases.",
+  );
 }
 
 function scheduleSafeStorageKeychainUnlockRetryAfterRendererLoad(): void {

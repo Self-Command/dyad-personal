@@ -476,7 +476,8 @@ export const exploreCodeTool: ToolDefinition<
   inputSchema: rawExploreCodeSchema,
   defaultConsent: "always",
   isEnabled: (ctx) =>
-    (ctx.subagentPersona === "explorer" || (ctx.inferenceSettings ?? readSettings()).enablePersonalMode === true) &&
+    (ctx.subagentPersona === "explorer" ||
+      (ctx.inferenceSettings ?? readSettings()).enablePersonalMode === true) &&
     (getExploreCodeAvailability(ctx).enabled ||
       [...ctx.referencedApps.values()].some(
         (appPath) => getExploreCodeAvailabilityForAppPath(ctx, appPath).enabled,
@@ -488,7 +489,11 @@ export const exploreCodeTool: ToolDefinition<
   execute: async (args, ctx) => {
     const appPath = resolveTargetAppPath(ctx, args.app_name);
     const availability = getExploreCodeAvailabilityForAppPath(ctx, appPath);
-    if (!availability.enabled) throw new DyadError("Code exploration is unavailable: " + availability.reason, DyadErrorKind.Precondition);
+    if (!availability.enabled)
+      throw new DyadError(
+        "Code exploration is unavailable: " + availability.reason,
+        DyadErrorKind.Precondition,
+      );
     const effectiveArgs = normalizeExploreCodeArgsForApp({
       appPath,
       args,

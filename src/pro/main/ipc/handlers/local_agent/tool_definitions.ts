@@ -742,7 +742,11 @@ export function shouldIncludeTool(
     return false;
   }
   // Local API mode never exposes tools backed by official paid endpoints.
-  if ((ctx.inferenceSettings ?? readSettings()).enablePersonalMode && tool.usesEngineEndpoint) return false;
+  if (
+    (ctx.inferenceSettings ?? readSettings()).enablePersonalMode &&
+    tool.usesEngineEndpoint
+  )
+    return false;
   if (
     options.toolProfile === "build" &&
     !BUILD_MODE_TOOL_NAME_SET.has(tool.name)

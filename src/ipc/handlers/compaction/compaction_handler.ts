@@ -210,15 +210,16 @@ export async function performCompaction(
           : await resolveDefaultModelSelection(storedSettings);
     // Stored connections describe an earlier turn, not this auxiliary request.
     const { connection: _connection, ...modelIdentity } = selectedModel;
-    const compactionModel = !storedSettings.enablePersonalMode && isDyadProEnabled(storedSettings)
-      ? await resolveModelSelection({
-          model: PRO_COMPACTION_MODEL,
-          preferredEffortLevel:
-            storedSettings.modelEffortPreferences?.[
-              getModelPreferenceKey(PRO_COMPACTION_MODEL)
-            ],
-        })
-      : modelIdentity;
+    const compactionModel =
+      !storedSettings.enablePersonalMode && isDyadProEnabled(storedSettings)
+        ? await resolveModelSelection({
+            model: PRO_COMPACTION_MODEL,
+            preferredEffortLevel:
+              storedSettings.modelEffortPreferences?.[
+                getModelPreferenceKey(PRO_COMPACTION_MODEL)
+              ],
+          })
+        : modelIdentity;
     const settings = {
       ...getAuxiliarySettings(storedSettings),
       selectedModel: compactionModel,

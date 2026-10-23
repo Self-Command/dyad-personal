@@ -4,7 +4,8 @@ import { isDyadProEnabled, isPersonalMode, type UserSettings } from "./schemas";
  * Return a request-only snapshot; never change the user's billing-source setting.
  */
 export function getAuxiliarySettings(settings: UserSettings): UserSettings {
-  if (isPersonalMode(settings)) return { ...settings, proModelUsage: "api-key" };
+  if (isPersonalMode(settings))
+    return { ...settings, proModelUsage: "api-key" };
   return settings.proModelUsage === "api-key" && isDyadProEnabled(settings)
     ? { ...settings, proModelUsage: "pro" }
     : settings;

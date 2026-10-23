@@ -67,7 +67,8 @@ export async function preflightSubscriptionTurn(
     await getCodexSubscriptionCredentials();
   let externalModelAdmission: ExternalModelAdmission | undefined;
   if (
-    !isPersonalMode(settings) && isDyadProEnabled(settings) &&
+    !isPersonalMode(settings) &&
+    isDyadProEnabled(settings) &&
     selections.some(
       (selection) =>
         (selection.connection === "subscription" &&

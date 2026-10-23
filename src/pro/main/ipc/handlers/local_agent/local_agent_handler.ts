@@ -1045,18 +1045,21 @@ export async function handleLocalAgentStream(
       isDyadPro: !settings.enablePersonalMode && isDyadProEnabled(settings),
       canUseExplorerSubagent:
         !buildMode &&
-        !settings.enablePersonalMode && isDyadProEnabled(settings) &&
+        !settings.enablePersonalMode &&
+        isDyadProEnabled(settings) &&
         settings.enableExplorerSubagent !== false &&
         settings.agentToolConsents?.spawn_agent !== "never",
       canUseImplementerSubagent:
         !buildMode &&
-        !settings.enablePersonalMode && isDyadProEnabled(settings) &&
+        !settings.enablePersonalMode &&
+        isDyadProEnabled(settings) &&
         isImplementerSubagentEnabled(settings) &&
         !readOnly &&
         !planModeOnly,
       canUseAdvancedSubagentTools:
         !buildMode &&
-        !settings.enablePersonalMode && isDyadProEnabled(settings) &&
+        !settings.enablePersonalMode &&
+        isDyadProEnabled(settings) &&
         settings.enableAdvancedSubagents === true,
       runTypeScriptForWholeProject:
         settings.runTypeScriptForWholeProject === true,
@@ -2433,7 +2436,8 @@ export async function handleLocalAgentStream(
       !buildMode &&
       workspaceChanged &&
       !hitStepLimit &&
-      !settings.enablePersonalMode && isDyadProEnabled(settings) &&
+      !settings.enablePersonalMode &&
+      isDyadProEnabled(settings) &&
       settings.enableAutoReview === true;
 
     // Send completion

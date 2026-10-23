@@ -141,7 +141,11 @@ export function ChatModeSelector() {
                 <div className="flex items-center gap-1.5">
                   <Bot size={14} className="text-muted-foreground" />
                   <span className="font-medium">
-                    {isPersonal ? "Local Agent (your API)" : isSubscription ? "Claude Code agent" : "Agent v2"}
+                    {isPersonal
+                      ? "Local Agent (your API)"
+                      : isSubscription
+                        ? "Claude Code agent"
+                        : "Agent v2"}
                   </span>
                 </div>
                 <span className="text-xs text-muted-foreground ml-[22px]">

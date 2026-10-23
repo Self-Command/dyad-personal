@@ -35,7 +35,7 @@ const WORKDIR_PREFIX = "AppImageWorkDir";
 /**
  * Minimalist Forge maker for AppImages
  */
-export class MakerAppImage extends MakerBase<{ icon?: string }> {
+export class MakerAppImage extends MakerBase<{ icon?: string; executableName?: string }> {
   override defaultPlatforms = ["linux"];
   override name = "AppImage";
   override requiredExternalBinaries = ["mksquashfs"];
@@ -55,7 +55,7 @@ export class MakerAppImage extends MakerBase<{ icon?: string }> {
     if (!version || typeof version !== "string")
       throw new Error("Could not access version information");
 
-    const { icon } = this.config;
+    const { icon, executableName = appName } = this.config;
 
     const exeName = `${appName}_${version}_x86_64.AppImage`;
     const outputDir = resolve(makeDir, "AppImage");
@@ -142,15 +142,15 @@ export class MakerAppImage extends MakerBase<{ icon?: string }> {
 
       // By convention, executables should be in /bin
       await symlink(
-        relative(binDir, resolve(libDir, appName)),
-        resolve(binDir, appName),
+        relative(binDir, resolve(libDir, executableName)),
+        resolve(binDir, executableName),
         "file",
       );
 
       // The entry point of an AppImage should be the AppRun file.
       // See: https://docs.appimage.org/reference/appdir.html#general-description
       await symlink(
-        relative(appDir, resolve(binDir, appName)),
+        relative(appDir, resolve(binDir, executableName)),
         resolve(appDir, "AppRun"),
         "file",
       );

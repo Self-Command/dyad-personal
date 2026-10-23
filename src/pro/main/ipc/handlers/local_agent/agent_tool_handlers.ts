@@ -46,7 +46,9 @@ export function registerAgentToolHandlers() {
         settings.runTypeScriptForWholeProject === true,
     };
     return TOOL_DEFINITIONS.filter(
-      (tool) => (!settings.enablePersonalMode || !tool.usesEngineEndpoint) && (isDyadProEnabled(settings) || !tool.subagentOnly),
+      (tool) =>
+        (!settings.enablePersonalMode || !tool.usesEngineEndpoint) &&
+        (isDyadProEnabled(settings) || !tool.subagentOnly),
     ).map((tool) => ({
       name: tool.name,
       description: resolveToolDescription(tool, descriptionContext),

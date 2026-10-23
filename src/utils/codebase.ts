@@ -485,7 +485,9 @@ async function prepareCodebaseFiles({
 }): Promise<PreparedCodebase | undefined> {
   const settings = readSettings();
   const isSmartContextEnabled =
-    !settings?.enablePersonalMode && settings?.enableDyadPro && settings?.enableProSmartFilesContextMode;
+    !settings?.enablePersonalMode &&
+    settings?.enableDyadPro &&
+    settings?.enableProSmartFilesContextMode;
 
   try {
     await fsAsync.access(appPath);

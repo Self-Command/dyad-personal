@@ -742,7 +742,9 @@ export function isDyadProEnabled(settings: UserSettings): boolean {
 }
 
 /** Local capability, deliberately separate from official subscription status. */
-export function isPersonalMode(settings: Pick<UserSettings, "enablePersonalMode">): boolean {
+export function isPersonalMode(
+  settings: Pick<UserSettings, "enablePersonalMode">,
+): boolean {
   return settings.enablePersonalMode === true;
 }
 

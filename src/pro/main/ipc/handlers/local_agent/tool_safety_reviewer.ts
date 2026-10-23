@@ -67,7 +67,9 @@ export async function reviewToolAction<D extends "ask" | "block">({
       controller.signal.throwIfAborted();
       state.phase = "model setup";
       const { modelClient } = await getModelClient(
-        isPersonalMode(settings) ? settings.selectedModel : { name: "gpt-6-luna", provider: "openai" },
+        isPersonalMode(settings)
+          ? settings.selectedModel
+          : { name: "gpt-6-luna", provider: "openai" },
         getAuxiliarySettings(settings),
       );
       controller.signal.throwIfAborted();

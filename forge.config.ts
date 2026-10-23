@@ -182,7 +182,10 @@ const config: ForgeConfig = {
           copyFile("LICENSE", path.join(buildPath, "LICENSE")),
           copyFile("NOTICE", path.join(buildPath, "NOTICE")),
           copyFile("src/pro/LICENSE", path.join(buildPath, "LICENSE-FSL")),
-        ]).then(() => callback(), (error) => callback(error as Error));
+        ]).then(
+          () => callback(),
+          (error) => callback(error as Error),
+        );
       },
       (buildPath, _electronVersion, platform, arch, callback) => {
         removeUnusedAppPackageFiles(buildPath, platform, arch).then(
@@ -245,6 +248,9 @@ const config: ForgeConfig = {
       // @ts-expect-error - incorrect types exported by MakerSquirrel
       isWindowsSigningEnabled
         ? {
+            name: "dyad_personal",
+            exe: "dyad-personal.exe",
+            setupExe: `dyad-personal-${packageJson.version}-win32-${process.arch}-setup.exe`,
             windowsSign,
             iconUrl:
               "https://raw.githubusercontent.com/dyad-sh/dyad/main/assets/icon/logo.ico",
@@ -262,17 +268,22 @@ const config: ForgeConfig = {
     new MakerZIP({}, ["darwin", "win32"]),
     new MakerRpm({
       options: {
+        name: "dyad-personal",
+        bin: "dyad-personal",
         mimeType: ["x-scheme-handler/dyad"],
         icon: "./assets/icon/logo.png",
       },
     }),
     new MakerDeb({
       options: {
+        name: "dyad-personal",
+        bin: "dyad-personal",
         mimeType: ["x-scheme-handler/dyad"],
         icon: "./assets/icon/logo.png",
       },
     }),
     new MakerAppImage({
+      executableName: "dyad-personal",
       icon: "./assets/icon/logo.png",
     }),
   ],

@@ -21,7 +21,10 @@ export function getExploreCodeAvailabilityForAppPath(
   reason: string | null;
   tsconfigPath: string | null;
 } {
-  if (!ctx.isDyadPro && !(ctx.inferenceSettings ?? readSettings()).enablePersonalMode) {
+  if (
+    !ctx.isDyadPro &&
+    !(ctx.inferenceSettings ?? readSettings()).enablePersonalMode
+  ) {
     return {
       enabled: false,
       reason: "dyad_pro_required",

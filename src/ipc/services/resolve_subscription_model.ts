@@ -21,8 +21,12 @@ export async function resolveSubscriptionModel(
 ): Promise<ModelSelection> {
   const { connection: _legacyConnection, ...identity } = model;
   if (isPersonalMode(settings)) {
-    if (model.provider === "claude-code" ||
-        (model.provider === "auto" && model.name !== "auto" && model.name !== "free")) {
+    if (
+      model.provider === "claude-code" ||
+      (model.provider === "auto" &&
+        model.name !== "auto" &&
+        model.name !== "free")
+    ) {
       throw new DyadError(
         "Personal mode uses your API keys or local models. Choose a configured provider, or disable Personal mode to use official services or subscriptions.",
         DyadErrorKind.Validation,

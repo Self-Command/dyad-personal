@@ -53,7 +53,8 @@ export function RuntimeModeSelector() {
 
   const isDockerMode = settings?.runtimeMode2 === "docker";
   const isCloudMode = settings?.runtimeMode2 === "cloud";
-  const hasCloudSandboxAccess = !settings.enablePersonalMode && Boolean(userBudget);
+  const hasCloudSandboxAccess =
+    !settings.enablePersonalMode && Boolean(userBudget);
   const showCloudSandboxOption = shouldShowCloudSandboxOption({
     runtimeMode: settings.runtimeMode2 ?? "host",
     cloudSandboxExperimentEnabled: !!settings.experiments?.enableCloudSandbox,

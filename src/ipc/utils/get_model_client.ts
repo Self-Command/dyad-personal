@@ -193,7 +193,11 @@ export async function getModelClient(
         settings.modelEffortPreferences?.[getModelPreferenceKey(selectedModel)],
     }));
   const model = getAutoSidekickRuntimeModel(selectedModel);
-  if (selectedModelSelection.connection === "pro" && !settings.enableDyadPro && !settings.enablePersonalMode)
+  if (
+    selectedModelSelection.connection === "pro" &&
+    !settings.enableDyadPro &&
+    !settings.enablePersonalMode
+  )
     throw new DyadError(
       "Enable Dyad Pro before using Pro credits.",
       DyadErrorKind.Auth,
@@ -252,12 +256,13 @@ export async function getModelClient(
   }
   const allProviders = await getLanguageModelProviders();
 
-  const dyadApiKey = settings.enableDyadPro && !settings.enablePersonalMode
-    ? getProviderApiKeyForRequest(
-        settings.providerSettings?.auto?.apiKey?.value,
-        "Dyad",
-      )
-    : undefined;
+  const dyadApiKey =
+    settings.enableDyadPro && !settings.enablePersonalMode
+      ? getProviderApiKeyForRequest(
+          settings.providerSettings?.auto?.apiKey?.value,
+          "Dyad",
+        )
+      : undefined;
   const isLocalProvider = ["ollama", "lmstudio"].includes(model.provider);
   const isDyadProEnabledForRequest = Boolean(
     dyadApiKey && settings.enableDyadPro,

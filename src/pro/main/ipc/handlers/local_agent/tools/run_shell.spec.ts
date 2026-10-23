@@ -63,10 +63,19 @@ describe("reviewed shell execution", () => {
     mocks.settings.enablePersonalMode = true;
     ctx.isDyadPro = false;
     ctx.requireConsent = vi.fn(async () => false);
-    const result = JSON.parse(await runShellTool.execute({ command: writeCommand, description: "personal test" }, ctx));
-    expect(ctx.requireConsent).toHaveBeenCalledWith(expect.objectContaining({ confirmation: "shell-approval" }));
+    const result = JSON.parse(
+      await runShellTool.execute(
+        { command: writeCommand, description: "personal test" },
+        ctx,
+      ),
+    );
+    expect(ctx.requireConsent).toHaveBeenCalledWith(
+      expect.objectContaining({ confirmation: "shell-approval" }),
+    );
     expect(result.status).toBe("cancelled");
-    await expect(readFile(path.join(directory, "result.txt"))).rejects.toThrow();
+    await expect(
+      readFile(path.join(directory, "result.txt")),
+    ).rejects.toThrow();
   });
   it("blocks despite saved always consent and never writes", async () => {
     mocks.review.mockResolvedValue({
