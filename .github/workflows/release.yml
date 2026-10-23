@@ -78,8 +78,8 @@ jobs:
           src/pro/main/ipc/handlers/local_agent/tools/engine_fetch.test.ts
           src/pro/main/ipc/handlers/local_agent/mcp_auto_consent.spec.ts
           src/testing/personal_chat_flow.test.ts
-      - name: Save formatter patch if needed
-        if: failure()
+      - name: Save cloud formatter changes
+        if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: formatting-patch
@@ -137,7 +137,16 @@ jobs:
         run: npm run make -- --arch=${{ matrix.arch }}
       - name: Package startup smoke test
         if: matrix.platform == 'linux'
+        timeout-minutes: 6
         run: xvfb-run --auto-servernum node scripts/personal-smoke.mjs
+      - name: Upload bounded startup diagnostics
+        if: ${{ always() && matrix.platform == 'linux' }}
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: smoke-diagnostics
+          path: out/smoke-diagnostics/
+          if-no-files-found: ignore
+          retention-days: 3
       - name: Stage versioned assets and SHA256 manifests
         run: node scripts/personal-release.mjs stage
         env:
