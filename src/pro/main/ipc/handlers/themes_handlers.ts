@@ -618,8 +618,11 @@ Modern dark theme with purple accents for testing.
       }
 
       if (!settings.enableDyadPro || settings.enablePersonalMode) {
-        throw new Error(
-          "Dyad Pro is required for AI theme generation. Please enable Dyad Pro in Settings.",
+        throw new DyadError(
+          settings.enablePersonalMode
+            ? "This theme-generation interface requires the official Engine. In Personal mode, ask your own vision model to describe the reference, then save a manual theme."
+            : "Dyad Pro is required for AI theme generation. Please enable Dyad Pro in Settings.",
+          DyadErrorKind.Precondition,
         );
       }
 
@@ -772,8 +775,11 @@ Modern theme extracted from website for testing.
       }
 
       if (!settings.enableDyadPro || settings.enablePersonalMode) {
-        throw new Error(
-          "Dyad Pro is required for AI theme generation. Please enable Dyad Pro in Settings.",
+        throw new DyadError(
+          settings.enablePersonalMode
+            ? "URL theme generation requires the official crawler. In Personal mode, use a self-hosted crawler MCP or a screenshot with your vision model, then save a manual theme."
+            : "Dyad Pro is required for AI theme generation. Please enable Dyad Pro in Settings.",
+          DyadErrorKind.Precondition,
         );
       }
 

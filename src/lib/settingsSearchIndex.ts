@@ -102,8 +102,8 @@ export const SETTINGS_SEARCH_INDEX: SearchableSettingItem[] = [
   },
   {
     id: SETTING_IDS.autoUpdate,
-    label: "Auto Update",
-    description: "Automatically update the app when new versions are available",
+    label: "Personal Releases",
+    description: "Download personal builds and install updates manually",
     keywords: ["update", "automatic", "version", "upgrade"],
     sectionId: SECTION_IDS.general,
     sectionLabel: "General",
@@ -509,7 +509,7 @@ export const SETTINGS_SEARCH_INDEX: SearchableSettingItem[] = [
     id: SETTING_IDS.autoApproveSafeMcpTools,
     label: "Skip consent for safe MCP tools",
     description:
-      "In Agent mode, use a fast model to judge each MCP tool call and skip the consent prompt for safe ones. Risky actions still require approval. Requires Dyad Pro",
+      "In Agent mode, use your Personal model or a Pro helper to judge MCP tool calls. Risky actions still require approval",
     keywords: [
       "mcp",
       "consent",
@@ -570,7 +570,7 @@ export const SETTINGS_SEARCH_INDEX: SearchableSettingItem[] = [
   },
   {
     id: SETTING_IDS.enableCodeExplorer,
-    label: "Enable code explorer (Pro)",
+    label: "Enable code explorer (local / Pro)",
     description:
       "Let the local agent explore configured TypeScript projects with a compiler-backed code graph",
     keywords: [

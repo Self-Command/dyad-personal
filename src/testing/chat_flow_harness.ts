@@ -363,6 +363,9 @@ export async function setupChatFlowHarness(
 
     // 3. Settings file via the app's own writer (mirrors the e2e test provider).
     const settings: Partial<UserSettings> = {
+      // Existing upstream suites exercise official modes explicitly. Personal
+      // integration suites opt in through options.settings below.
+      enablePersonalMode: false,
       selectedModel: options.selectedModel ?? {
         provider: options.provider?.id ?? "testing",
         name: options.model?.apiName ?? "test-model",

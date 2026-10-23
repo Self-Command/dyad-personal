@@ -64,11 +64,13 @@ jobs:
           src/lib/personal_mode.test.ts
           src/lib/auxiliaryModel.test.ts
           src/shared/shell_capability.test.ts
+          src/lib/settingsSearchIndex.test.ts
           src/components/ShellExperimentSwitch.test.tsx
           src/main/settings.test.ts
           src/ipc/utils/get_model_client.test.ts
           src/ipc/services/subscription_turn_preflight.test.ts
           src/pro/main/ipc/handlers/local_agent/tool_safety_reviewer.test.ts
+          src/pro/main/ipc/handlers/local_agent/shell_review.test.ts
           src/pro/main/ipc/handlers/local_agent/tools/run_shell.spec.ts
           src/pro/main/ipc/handlers/local_agent/tools/shell_process.test.ts
           src/pro/main/ipc/handlers/local_agent/tools/shell_process_windows.test.ts
@@ -78,6 +80,7 @@ jobs:
           src/pro/main/ipc/handlers/local_agent/tools/engine_fetch.test.ts
           src/pro/main/ipc/handlers/local_agent/mcp_auto_consent.spec.ts
           src/testing/personal_chat_flow.test.ts
+          src/testing/chat_flow_harness.smoke.test.ts
       - name: Save cloud formatter changes
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6

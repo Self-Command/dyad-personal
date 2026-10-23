@@ -11,6 +11,7 @@ export function PersonalModeSwitch() {
           id="personal-mode"
           aria-label="Personal mode"
           checked={!!settings?.enablePersonalMode}
+          disabled={!settings}
           onCheckedChange={(checked) =>
             updateSettings({ enablePersonalMode: checked })
           }
