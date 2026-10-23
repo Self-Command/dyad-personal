@@ -68,6 +68,7 @@ jobs:
           src/lib/subscriptionModels.test.ts
           src/hooks/useLanguageModelProviders.test.ts
           src/components/ShellExperimentSwitch.test.tsx
+          src/components/SetupBanner.test.tsx
           src/main/settings.test.ts
           src/ipc/utils/get_model_client.test.ts
           src/ipc/services/subscription_turn_preflight.test.ts

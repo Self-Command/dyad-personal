@@ -12,6 +12,7 @@ const mocks = vi.hoisted(() => ({
     isLoading: true,
   },
   subscriptionLoading: false,
+  personal: false,
   subscription: {
     connected: false,
     pending: false,
@@ -43,13 +44,23 @@ vi.mock("./useSettings", () => ({
     envVars: {},
     settings: {
       providerSettings: {},
+      enablePersonalMode: mocks.personal,
       selectedModel: mocks.selectedModel,
     },
   }),
 }));
 
 describe("useLanguageModelProviders", () => {
+  it("does not count an official subscription as Personal API setup", () => {
+    mocks.personal = true;
+    mocks.useQueryResult.isLoading = false;
+    mocks.selectedModel = { provider: "openai", name: "subscription-model" };
+    mocks.subscription.connected = true;
+    const { result } = renderHook(() => useLanguageModelProviders());
+    expect(result.current.isAnyProviderSetup()).toBe(false);
+  });
   beforeEach(() => {
+    mocks.personal = false;
     mocks.subscriptionLoading = false;
     mocks.subscription = {
       connected: false,

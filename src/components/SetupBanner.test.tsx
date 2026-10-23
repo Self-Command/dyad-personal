@@ -13,6 +13,7 @@ const mocks = vi.hoisted(() => ({
   settingsLoading: false,
   subscriptionLoading: false,
   pro: false,
+  personal: false,
 }));
 vi.mock("react-i18next", () => ({
   useTranslation: () => ({ t: (key: string) => key }),
@@ -52,6 +53,7 @@ vi.mock("@/hooks/useSettings", () => ({
       ? undefined
       : {
           enableDyadPro: mocks.pro,
+          enablePersonalMode: mocks.personal,
           providerSettings: mocks.pro
             ? { auto: { apiKey: { value: "pro-key" } } }
             : {},
@@ -75,6 +77,7 @@ beforeEach(() => {
   mocks.subscriptionLoading = false;
   mocks.pending = false;
   mocks.pro = false;
+  mocks.personal = false;
 });
 function setup() {
   render(
@@ -88,6 +91,16 @@ function setup() {
   );
   return userEvent.setup();
 }
+it("guides Personal users directly to their own model provider without official checkout", async () => {
+  mocks.personal = true;
+  const user = setup();
+  expect(screen.queryByText("Start free Dyad Pro trial")).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: /ChatGPT subscription/ })).not.toBeInTheDocument();
+  await user.click(screen.getByRole("button", { name: "Configure model providers" }));
+  expect(mocks.navigate).toHaveBeenCalled();
+  expect(mocks.connect).not.toHaveBeenCalled();
+});
+
 it("offers ChatGPT sign-in without a Pro key and keeps other providers accessible", async () => {
   const user = setup();
   expect(
