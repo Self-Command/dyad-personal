@@ -2327,7 +2327,8 @@ function assertPersonaEnabled(
 }
 
 function assertPro(persona?: SubagentPersona): void {
-  if (!isDyadProEnabled(readSettings())) {
+  const settings = readSettings();
+  if (settings.enablePersonalMode || !isDyadProEnabled(settings)) {
     throw new DyadError(
       persona
         ? `${persona} sub-agents require Dyad Pro.`
@@ -2701,7 +2702,8 @@ function watchEntitlement(
   controller: AbortController,
 ): ReturnType<typeof setInterval> {
   const timer = setInterval(() => {
-    if (isDyadProEnabled(readSettings())) return;
+    const settings = readSettings();
+    if (!settings.enablePersonalMode && isDyadProEnabled(settings)) return;
     clearInterval(timer);
     controller.abort();
     void finishThread(

@@ -39,7 +39,7 @@ describe("independent personal capabilities", () => {
     "routes %s directly without consulting official subscription services",
     async (provider) => {
       const model = await resolveSubscriptionModel(
-        { provider, name: "my-model", connection: "pro" },
+        { provider, name: "my-model", connection: "pro", effortLevel: "medium" },
         { ...settings, enableDyadPro: true },
       );
       expect(model.connection).toBe("api-key");
@@ -51,13 +51,13 @@ describe("independent personal capabilities", () => {
   it("rejects official-only model choices with an actionable error", async () => {
     await expect(
       resolveSubscriptionModel(
-        { provider: "auto", name: "free-pro" },
+        { provider: "auto", name: "free-pro", effortLevel: "medium" },
         settings,
       ),
     ).rejects.toThrow("Personal mode uses your API keys");
     await expect(
       resolveSubscriptionModel(
-        { provider: "claude-code", name: "default" },
+        { provider: "claude-code", name: "default", effortLevel: "medium" },
         settings,
       ),
     ).rejects.toThrow("Personal mode uses your API keys");

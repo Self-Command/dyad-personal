@@ -27,8 +27,8 @@ export function ShellExperimentSwitch() {
         using your selected API or local model and asks for approval every time.
         Official mode uses Pro credits. Commands run on your machine without
         filesystem isolation, and an AI safety review can make mistakes.
-        Commands classified as safe run automatically unless you set run_shell
-        consent to Ask. Consequential commands may require your approval; clear
+        In official mode, commands classified as safe run automatically unless
+        you set run_shell consent to Ask. Consequential commands require approval; clear
         safety violations are blocked. Available only with the Host runtime.
       </div>
     </div>

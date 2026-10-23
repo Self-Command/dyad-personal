@@ -38,6 +38,7 @@ jobs:
           args: -color .github/workflows/release.yml
       - run: npm install -g npm@11.8.0
       - name: Install locked dependencies
+        id: deps
         run: npm ci --no-audit --no-fund
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -48,18 +49,22 @@ jobs:
           node scripts/personal-release.mjs check
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Formatting, lint and types
+      - name: Formatting and lint
         run: |
           npm run fmt
           git diff > formatting.patch
           npm run lint
-          npm run ts
+      - name: Type checks
+        if: ${{ !cancelled() && steps.deps.outcome == 'success' }}
+        run: npm run ts
       - name: Test local capabilities and existing model routing
+        if: ${{ !cancelled() && steps.deps.outcome == 'success' }}
         run: >-
           npm test --
           src/lib/personal_mode.test.ts
           src/lib/auxiliaryModel.test.ts
           src/shared/shell_capability.test.ts
+          src/components/ShellExperimentSwitch.test.tsx
           src/main/settings.test.ts
           src/ipc/utils/get_model_client.test.ts
           src/ipc/services/subscription_turn_preflight.test.ts
@@ -68,8 +73,11 @@ jobs:
           src/pro/main/ipc/handlers/local_agent/tools/shell_process.test.ts
           src/pro/main/ipc/handlers/local_agent/tools/shell_process_windows.test.ts
           src/pro/main/ipc/handlers/local_agent/tools/subagent_tool_set.spec.ts
+          src/pro/main/ipc/handlers/local_agent/tools/subagent_tools.test.ts
+          src/pro/main/ipc/handlers/local_agent/tools/personal_tools.spec.ts
           src/pro/main/ipc/handlers/local_agent/tools/engine_fetch.test.ts
           src/pro/main/ipc/handlers/local_agent/mcp_auto_consent.spec.ts
+          src/testing/personal_chat_flow.test.ts
       - name: Save formatter patch if needed
         if: failure()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6

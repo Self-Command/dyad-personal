@@ -508,9 +508,9 @@ describe("spawn_agent schema", () => {
         cancelAgentTool,
         sendMessageTool,
         followupTaskTool,
-        exploreCodeTool,
       ].every((tool) => tool.subagentOnly),
     ).toBe(true);
+      expect(exploreCodeTool.subagentOnly).not.toBe(true);
     expect(spawnAgentTool.mutationTracking).toBe("none");
     expect(spawnAgentTool.requiresBlueprintApproval).toBe(false);
     expect(spawnAgentTool.usesEngineEndpoint).toBe(true);

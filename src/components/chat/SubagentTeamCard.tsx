@@ -58,7 +58,7 @@ export function SubagentTeamCard({
     new Set(),
   );
   const [now, setNow] = useState(Date.now());
-  const isPro = settings ? isDyadProEnabled(settings) : false;
+  const isPro = settings ? !settings.enablePersonalMode && isDyadProEnabled(settings) : false;
   const showReviewButton = showReviewAction && !!settings?.enableReviewButton;
   const query = useQuery({
     queryKey,
