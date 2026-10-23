@@ -11,7 +11,7 @@ export function isShellExperimentAvailable({
 }: {
   settings: Pick<
     UserSettings,
-    "enableShellTool" | "runtimeMode2" | "agentToolConsents"
+    "enableShellTool" | "runtimeMode2" | "agentToolConsents" | "enablePersonalMode"
   >;
   isDyadPro: boolean;
   freeModelMode?: boolean;
@@ -22,7 +22,7 @@ export function isShellExperimentAvailable({
 }): boolean {
   return (
     !!settings.enableShellTool &&
-    isDyadPro &&
+    (isDyadPro || settings.enablePersonalMode === true) &&
     !freeModelMode &&
     !readOnly &&
     !planModeOnly &&

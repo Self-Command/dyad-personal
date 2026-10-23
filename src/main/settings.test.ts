@@ -115,7 +115,7 @@ describe("readSettings", () => {
           "enableAdvancedSubagents": false,
           "enableAppBlueprint": true,
           "enableAutoReview": false,
-          "enableAutoUpdate": true,
+          "enableAutoUpdate": false,
           "enableClaudeCodeSubscription": false,
           "enableCodeExplorer": true,
           "enableContextCompaction": true,
@@ -123,6 +123,7 @@ describe("readSettings", () => {
           "enableImplementerSubagent": false,
           "enableMcpToolSearch": true,
           "enableMultiWindow": false,
+          "enablePersonalMode": true,
           "enablePnpmMinimumReleaseAgeWarning": true,
           "enableProLazyEditsMode": true,
           "enableProSmartFilesContextMode": true,
@@ -180,7 +181,7 @@ describe("readSettings", () => {
       expect(result.hasRunBefore).toBe(true);
       // Should still have defaults for missing properties
       expect(result.blockUnsafeNpmPackages).toBeUndefined();
-      expect(result.enableAutoUpdate).toBe(true);
+      expect(result.enableAutoUpdate).toBe(false);
       expect(result.releaseChannel).toBe("stable");
       expect(result.autoApproveSafeMcpTools).toBe(true);
     });
@@ -527,7 +528,7 @@ describe("readSettings", () => {
       });
 
       // Should still have defaults for missing properties
-      expect(result.enableAutoUpdate).toBe(true);
+      expect(result.enableAutoUpdate).toBe(false);
       expect(result.releaseChannel).toBe("stable");
     });
 
@@ -570,7 +571,7 @@ describe("readSettings", () => {
           "enableAdvancedSubagents": false,
           "enableAppBlueprint": true,
           "enableAutoReview": false,
-          "enableAutoUpdate": true,
+          "enableAutoUpdate": false,
           "enableClaudeCodeSubscription": false,
           "enableCodeExplorer": true,
           "enableContextCompaction": true,
@@ -578,6 +579,7 @@ describe("readSettings", () => {
           "enableImplementerSubagent": false,
           "enableMcpToolSearch": true,
           "enableMultiWindow": false,
+          "enablePersonalMode": true,
           "enablePnpmMinimumReleaseAgeWarning": true,
           "enableProLazyEditsMode": true,
           "enableProSmartFilesContextMode": true,

@@ -42,6 +42,10 @@ export function ProModeSelector() {
 
   const hasProKey = settings ? hasDyadProKey(settings) : false;
 
+  if (settings?.enablePersonalMode) {
+    return <span className="px-2 text-xs text-muted-foreground">Personal · your API</span>;
+  }
+
   return (
     <Popover>
       <Tooltip>

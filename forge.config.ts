@@ -14,6 +14,8 @@ import { FusesPlugin } from "@electron-forge/plugin-fuses";
 import { FuseV1Options, FuseVersion } from "@electron/fuses";
 import { AutoUnpackNativesPlugin } from "@electron-forge/plugin-auto-unpack-natives";
 import { readFileSync } from "fs";
+import { copyFile } from "node:fs/promises";
+import path from "node:path";
 import { createRequire } from "module";
 
 console.log("AZURE_CODE_SIGNING_DLIB", process.env.AZURE_CODE_SIGNING_DLIB);
@@ -147,6 +149,7 @@ const ignore = (file: string) => {
 };
 
 const isEndToEndTestBuild = process.env.E2E_TEST_BUILD === "true";
+const isMacSigningEnabled = !isEndToEndTestBuild && !!process.env.APPLE_TEAM_ID;
 const isWindowsSigningEnabled = process.env.WINDOWS_SIGN === "true";
 const shouldSkipNativeRebuild = process.env.DYAD_SKIP_NATIVE_REBUILD === "true";
 const nativeRebuildModules = [
@@ -165,6 +168,8 @@ if (isWindowsSigningEnabled && !process.env.AZURE_CODE_SIGNING_DLIB) {
 
 const config: ForgeConfig = {
   packagerConfig: {
+    appBundleId: "dev.selfcommand.dyad-personal",
+    executableName: "dyad-personal",
     // E2E test builds install local file: dependencies as links on Windows.
     // Dereference them so packaging does not require symlink privileges in the temp app.
     // Local file: native packages install as symlinks; dereference them so the
@@ -172,6 +177,13 @@ const config: ForgeConfig = {
     derefSymlinks: true,
     windowsSign: isWindowsSigningEnabled ? windowsSign : undefined,
     afterCopy: [
+      (buildPath, _electronVersion, _platform, _arch, callback) => {
+        Promise.all([
+          copyFile("LICENSE", path.join(buildPath, "LICENSE")),
+          copyFile("NOTICE", path.join(buildPath, "NOTICE")),
+          copyFile("src/pro/LICENSE", path.join(buildPath, "LICENSE-FSL")),
+        ]).then(() => callback(), (error) => callback(error as Error));
+      },
       (buildPath, _electronVersion, platform, arch, callback) => {
         removeUnusedAppPackageFiles(buildPath, platform, arch).then(
           () => callback(),
@@ -195,7 +207,7 @@ const config: ForgeConfig = {
     ],
     icon: "./assets/icon/logo",
 
-    osxSign: isEndToEndTestBuild
+    osxSign: !isMacSigningEnabled
       ? undefined
       : ({
           identity: process.env.APPLE_TEAM_ID,
@@ -206,7 +218,7 @@ const config: ForgeConfig = {
           // and the cwd scan crashes on broken symlinks like CLAUDE.md)
           preEmbedProvisioningProfile: false,
         } as Record<string, unknown>),
-    osxNotarize: isEndToEndTestBuild
+    osxNotarize: !isMacSigningEnabled
       ? undefined
       : {
           appleId: process.env.APPLE_ID!,
@@ -239,12 +251,15 @@ const config: ForgeConfig = {
             setupIcon: "./assets/icon/logo.ico",
           }
         : {
+            name: "dyad_personal",
+            exe: "dyad-personal.exe",
+            setupExe: `dyad-personal-${packageJson.version}-win32-${process.arch}-setup.exe`,
             iconUrl:
               "https://raw.githubusercontent.com/dyad-sh/dyad/main/assets/icon/logo.ico",
             setupIcon: "./assets/icon/logo.ico",
           },
     ),
-    new MakerZIP({}, ["darwin"]),
+    new MakerZIP({}, ["darwin", "win32"]),
     new MakerRpm({
       options: {
         mimeType: ["x-scheme-handler/dyad"],
@@ -266,11 +281,11 @@ const config: ForgeConfig = {
       name: "@electron-forge/publisher-github",
       config: {
         repository: {
-          owner: "dyad-sh",
-          name: "dyad",
+          owner: "Self-Command",
+          name: "dyad-personal",
         },
         draft: true,
-        force: true,
+        force: false,
         prerelease: isPrereleaseVersion(packageJson.version),
       },
     },

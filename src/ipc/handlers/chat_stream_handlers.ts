@@ -1614,6 +1614,7 @@ ${componentSnippet}
         const current = readSettings();
         return {
           enableDyadPro: current.enableDyadPro,
+          enablePersonalMode: current.enablePersonalMode,
           enableClaudeCodeSubscription: current.enableClaudeCodeSubscription,
           proModelUsage: current.proModelUsage,
           providerSettings: current.providerSettings,
@@ -2197,7 +2198,7 @@ ${componentSnippet}
         // persona is disabled. Code-index readiness is independent now that
         // spawn_agent replaces the old explore_code tool.
         const codeExplorerAvailable =
-          isDyadProEnabled(settings) &&
+          !settings.enablePersonalMode && isDyadProEnabled(settings) &&
           settings.enableExplorerSubagent !== false &&
           settings.agentToolConsents?.["spawn_agent"] !== "never";
         // Mirrors explore_chat_history's toolset inclusion (Pro, and not
@@ -2205,11 +2206,11 @@ ${componentSnippet}
         // that isn't in the toolset. Consent is read from settings directly
         // because this module must not import the pro tool registry.
         const historyExplorerAvailable =
-          isDyadProEnabled(settings) &&
+          !settings.enablePersonalMode && isDyadProEnabled(settings) &&
           settings.agentToolConsents?.["explore_chat_history"] !== "never";
         const implementerAvailable =
           selectedChatMode === "local-agent" &&
-          isDyadProEnabled(settings) &&
+          !settings.enablePersonalMode && isDyadProEnabled(settings) &&
           isImplementerSubagentEnabled(settings);
         const restartAppToolAvailable =
           settings.agentToolConsents?.["restart_app"] !== "never";

@@ -12,6 +12,7 @@ export const SECTION_IDS = {
 } as const;
 
 export const SETTING_IDS = {
+  personalMode: "setting-personal-mode",
   theme: "setting-theme",
   zoom: "setting-zoom",
   autoUpdate: "setting-auto-update",
@@ -73,6 +74,14 @@ type SearchableSettingItem = {
 };
 
 export const SETTINGS_SEARCH_INDEX: SearchableSettingItem[] = [
+  {
+    id: SETTING_IDS.personalMode,
+    label: "Personal mode",
+    description: "Run the local agent, code explorer and reviewed shell with your own API or self-hosted models",
+    keywords: ["personal", "local", "api", "self-hosted", "shell"],
+    sectionId: SECTION_IDS.providers,
+    sectionLabel: "Model Providers",
+  },
   // General Settings
   {
     id: SETTING_IDS.theme,
@@ -480,9 +489,9 @@ export const SETTINGS_SEARCH_INDEX: SearchableSettingItem[] = [
   },
   {
     id: SETTING_IDS.enableShellTool,
-    label: "Shell tool (Pro)",
+    label: "Shell tool",
     description:
-      "Allow reviewed Bash or PowerShell commands in Pro Agent mode on the local host",
+      "Allow reviewed Bash or PowerShell commands with Personal mode or Pro on the local host",
     keywords: [
       "shell",
       "bash",

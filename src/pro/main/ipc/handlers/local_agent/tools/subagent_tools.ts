@@ -3,6 +3,7 @@ import type { ToolSet } from "ai";
 import { DyadError, DyadErrorKind, isDyadError } from "@/errors/dyad_error";
 import type { SubagentThreadSummary } from "@/ipc/types";
 import { getErrorMessage } from "@/lib/errors";
+import { readSettings } from "@/main/settings";
 
 import { buildAgentToolSet, TOOL_DEFINITIONS } from "../tool_definitions";
 import {
@@ -474,9 +475,8 @@ export const exploreCodeTool: ToolDefinition<
     "Explore the configured TypeScript project using compiler-backed symbol and dependency analysis. Returns relevant symbols and line-numbered source windows grouped by file.",
   inputSchema: rawExploreCodeSchema,
   defaultConsent: "always",
-  subagentOnly: true,
   isEnabled: (ctx) =>
-    ctx.subagentPersona === "explorer" &&
+    (ctx.subagentPersona === "explorer" || (ctx.inferenceSettings ?? readSettings()).enablePersonalMode === true) &&
     (getExploreCodeAvailability(ctx).enabled ||
       [...ctx.referencedApps.values()].some(
         (appPath) => getExploreCodeAvailabilityForAppPath(ctx, appPath).enabled,
@@ -488,6 +488,7 @@ export const exploreCodeTool: ToolDefinition<
   execute: async (args, ctx) => {
     const appPath = resolveTargetAppPath(ctx, args.app_name);
     const availability = getExploreCodeAvailabilityForAppPath(ctx, appPath);
+    if (!availability.enabled) throw new DyadError("Code exploration is unavailable: " + availability.reason, DyadErrorKind.Precondition);
     const effectiveArgs = normalizeExploreCodeArgsForApp({
       appPath,
       args,

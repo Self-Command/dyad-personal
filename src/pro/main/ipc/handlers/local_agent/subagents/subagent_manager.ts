@@ -902,7 +902,7 @@ export async function runAutoReviewBarrier(params: {
   params.deadlineAt ??= Date.now() + AUTO_REVIEW_BARRIER_MAX_WAIT_MS;
   const settings = readSettings();
   const isPro = isDyadProEnabled(settings);
-  if ((!settings.enableAutoReview && !params.verification) || !isPro) {
+  if ((!settings.enableAutoReview && !params.verification) || !isPro || settings.enablePersonalMode) {
     return { outcome: "skipped" };
   }
   const latest = await db.query.messages.findFirst({

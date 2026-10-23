@@ -11,6 +11,7 @@ const mocks = vi.hoisted(() => ({
   deleteFunctions: vi.fn(),
   settings: {
     enableShellTool: true,
+    enablePersonalMode: false,
     enableDyadPro: true,
     providerSettings: { auto: { apiKey: { value: "test" } } },
     agentToolConsents: { run_shell: "always" },
@@ -33,6 +34,7 @@ let ctx: AgentContext;
 beforeEach(async () => {
   vi.clearAllMocks();
   mocks.settings.enableShellTool = true;
+  mocks.settings.enablePersonalMode = false;
   directory = await mkdtemp(path.join(os.tmpdir(), "dyad-shell-tool-"));
   ctx = {
     appId: 81234,
@@ -57,6 +59,15 @@ const writeCommand =
     ? "Set-Content result.txt 'done'"
     : "printf done > result.txt";
 describe("reviewed shell execution", () => {
+  it("personal shell requires one-time approval even when the review allows and consent is saved always", async () => {
+    mocks.settings.enablePersonalMode = true;
+    ctx.isDyadPro = false;
+    ctx.requireConsent = vi.fn(async () => false);
+    const result = JSON.parse(await runShellTool.execute({ command: writeCommand, description: "personal test" }, ctx));
+    expect(ctx.requireConsent).toHaveBeenCalledWith(expect.objectContaining({ confirmation: "shell-approval" }));
+    expect(result.status).toBe("cancelled");
+    await expect(readFile(path.join(directory, "result.txt"))).rejects.toThrow();
+  });
   it("blocks despite saved always consent and never writes", async () => {
     mocks.review.mockResolvedValue({
       decision: "block",

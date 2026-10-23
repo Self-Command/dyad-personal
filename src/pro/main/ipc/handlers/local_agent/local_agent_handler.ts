@@ -799,7 +799,8 @@ export async function handleLocalAgentStream(
     !buildMode &&
     !readOnly &&
     !planModeOnly &&
-    !isDyadProEnabled(settings) &&
+    !settings.enablePersonalMode &&
+    !!settings.enablePersonalMode && isDyadProEnabled(settings) &&
     selectedModel.provider !== "claude-code" &&
     !isBasicAgentMode(settings)
   ) {
@@ -1041,21 +1042,21 @@ export async function handleLocalAgentStream(
       appBlueprintQuestionnaireCompleted: hasCompletedAppBlueprintQuestionnaire(
         chat.messages,
       ),
-      isDyadPro: isDyadProEnabled(settings),
+      isDyadPro: !settings.enablePersonalMode && isDyadProEnabled(settings),
       canUseExplorerSubagent:
         !buildMode &&
-        isDyadProEnabled(settings) &&
+        !settings.enablePersonalMode && isDyadProEnabled(settings) &&
         settings.enableExplorerSubagent !== false &&
         settings.agentToolConsents?.spawn_agent !== "never",
       canUseImplementerSubagent:
         !buildMode &&
-        isDyadProEnabled(settings) &&
+        !settings.enablePersonalMode && isDyadProEnabled(settings) &&
         isImplementerSubagentEnabled(settings) &&
         !readOnly &&
         !planModeOnly,
       canUseAdvancedSubagentTools:
         !buildMode &&
-        isDyadProEnabled(settings) &&
+        !settings.enablePersonalMode && isDyadProEnabled(settings) &&
         settings.enableAdvancedSubagents === true,
       runTypeScriptForWholeProject:
         settings.runTypeScriptForWholeProject === true,
@@ -2429,10 +2430,11 @@ export async function handleLocalAgentStream(
       !planModeOnly &&
       (workspaceChanged || ctx.mcpToolRan === true);
     const reviewBarrierRequested =
+      !settings.enablePersonalMode &&
       !buildMode &&
       workspaceChanged &&
       !hitStepLimit &&
-      isDyadProEnabled(settings) &&
+      !settings.enablePersonalMode && isDyadProEnabled(settings) &&
       settings.enableAutoReview === true;
 
     // Send completion
@@ -2450,7 +2452,7 @@ export async function handleLocalAgentStream(
         warningMessages.length > 0 ? [...new Set(warningMessages)] : undefined,
       pausePromptQueue: hitStepLimit || reviewBarrierRequested || undefined,
       reviewBarrierRequested: reviewBarrierRequested || undefined,
-      suppressAutoReview: buildMode || undefined,
+      suppressAutoReview: buildMode || settings.enablePersonalMode || undefined,
     } satisfies ChatResponseEnd);
 
     return true; // Success

@@ -192,7 +192,7 @@ export function registerTokenCountHandlers() {
         systemPrompt += "\n\n" + SUPABASE_NOT_AVAILABLE_SYSTEM_PROMPT;
       }
 
-      const isDyadPro = isDyadProEnabled(settings);
+      const isDyadPro = !settings.enablePersonalMode && isDyadProEnabled(settings);
       const freeModelMode = isFreeProModel(selectedModel);
       const mcpToolDefs =
         selectedChatMode === "local-agent" ? getCachedMcpToolDefs() : [];

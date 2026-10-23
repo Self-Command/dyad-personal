@@ -4,7 +4,7 @@ import log from "electron-log";
 import { getModelClient } from "@/ipc/utils/get_model_client";
 import { fastTextOutput } from "@/ipc/utils/stream_text_utils";
 import { extractJson } from "@/ipc/utils/extract_json";
-import type { UserSettings } from "@/lib/schemas";
+import { isPersonalMode, type UserSettings } from "@/lib/schemas";
 import { getAuxiliarySettings } from "@/lib/auxiliaryModel";
 
 export const TOOL_REVIEW_TIMEOUT_MS = 8_000;
@@ -67,7 +67,7 @@ export async function reviewToolAction<D extends "ask" | "block">({
       controller.signal.throwIfAborted();
       state.phase = "model setup";
       const { modelClient } = await getModelClient(
-        { name: "gpt-6-luna", provider: "openai" },
+        isPersonalMode(settings) ? settings.selectedModel : { name: "gpt-6-luna", provider: "openai" },
         getAuxiliarySettings(settings),
       );
       controller.signal.throwIfAborted();

@@ -2,6 +2,7 @@ import { ShellExperimentSwitch } from "@/components/ShellExperimentSwitch";
 import { useEffect, useState, type ReactNode } from "react";
 import { useTheme } from "../contexts/ThemeContext";
 import { ProviderSettingsGrid } from "@/components/ProviderSettings";
+import { PersonalModeSwitch } from "@/components/PersonalModeSwitch";
 import ConfirmationDialog from "@/components/ConfirmationDialog";
 import { ipc } from "@/ipc/types";
 import { showSuccess, showError } from "@/lib/toast";
@@ -148,6 +149,9 @@ export default function SettingsPage() {
             description="Connect the AI providers Dyad uses to build and run your apps."
           >
             <ProviderSettingsGrid />
+            <div id={SETTING_IDS.personalMode} className="mt-4">
+              <PersonalModeSwitch />
+            </div>
           </SettingsSection>
 
           <SettingsSection
@@ -386,7 +390,7 @@ export default function SettingsPage() {
               <div className="flex items-center gap-2">
                 <Switch
                   id="enable-code-explorer"
-                  aria-label="Enable code explorer (Pro)"
+                  aria-label="Enable code explorer"
                   checked={!!settings?.enableCodeExplorer}
                   onCheckedChange={(checked) => {
                     updateSettings({
@@ -395,7 +399,7 @@ export default function SettingsPage() {
                   }}
                 />
                 <Label htmlFor="enable-code-explorer">
-                  Enable code explorer (Pro)
+                  Enable code explorer (local / Pro)
                 </Label>
               </div>
               <p className={hint}>

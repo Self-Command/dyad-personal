@@ -550,6 +550,7 @@ const BaseUserSettingsFields = {
   // Applies only to requests routed through the ChatGPT subscription adapter.
   chatgptFastMode: z.boolean().optional(),
   enableDyadPro: z.boolean().optional(),
+  enablePersonalMode: z.boolean().optional(),
   experiments: ExperimentsSchema.optional(),
   lastShownReleaseNotesVersion: z.string().optional(),
   maxChatTurnsInContext: z.number().optional(),
@@ -740,6 +741,11 @@ export function isDyadProEnabled(settings: UserSettings): boolean {
   return settings.enableDyadPro === true && hasDyadProKey(settings);
 }
 
+/** Local capability, deliberately separate from official subscription status. */
+export function isPersonalMode(settings: Pick<UserSettings, "enablePersonalMode">): boolean {
+  return settings.enablePersonalMode === true;
+}
+
 export function hasDyadProKey(settings: UserSettings): boolean {
   return !!settings.providerSettings?.auto?.apiKey?.value;
 }
@@ -792,6 +798,7 @@ export function getEffectiveDefaultChatMode(
  */
 export function isBasicAgentMode(settings: UserSettings): boolean {
   return (
+    !isPersonalMode(settings) &&
     settings.selectedModel.provider !== "claude-code" &&
     !isDyadProEnabled(settings) &&
     settings.selectedChatMode === "local-agent"

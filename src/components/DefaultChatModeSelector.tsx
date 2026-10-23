@@ -41,6 +41,7 @@ export function DefaultChatModeSelector() {
   }
 
   const isProEnabled = isDyadProEnabled(settings);
+  const hasLocalAgent = settings.enablePersonalMode || isProEnabled;
   const isDyadFreeSelected = isFreeProModel(settings.selectedModel);
   const effectiveDefault = getEffectiveDefaultChatMode(settings, envVars);
 
@@ -56,7 +57,7 @@ export function DefaultChatModeSelector() {
       case "build":
         return "Build";
       case "local-agent":
-        return isProEnabled ? "Agent" : "Basic Agent";
+        return hasLocalAgent ? "Agent" : "Basic Agent";
       case "ask":
         return "Ask";
       case "plan":
@@ -87,10 +88,10 @@ export function DefaultChatModeSelector() {
           <SelectItem value="local-agent">
             <div className="flex flex-col items-start">
               <span className="font-medium">
-                {isProEnabled ? "Agent" : "Basic Agent"}
+                {hasLocalAgent ? "Agent" : "Basic Agent"}
               </span>
               <span className="text-xs text-muted-foreground">
-                {isProEnabled
+                {hasLocalAgent
                   ? "Better at bigger tasks"
                   : quotaStatus?.isQuotaExceeded
                     ? "Daily limit reached; preference applies after reset"

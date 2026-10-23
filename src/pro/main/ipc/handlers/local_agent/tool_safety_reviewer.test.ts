@@ -26,6 +26,12 @@ beforeEach(() => {
   mocks.getModelClient.mockResolvedValue({ modelClient: { model: {} } });
 });
 describe("mandatory tool reviewer", () => {
+  it("reviews personal commands with the selected user model and direct API settings", async () => {
+    const settings = { enablePersonalMode: true, selectedModel: { provider: "ollama", name: "local-tool-model" }, providerSettings: {}, proModelUsage: "pro" } as UserSettings;
+    mocks.streamText.mockReturnValue({ text: Promise.resolve('{"reason":"Bounded task","decision":"allow"}') });
+    expect((await reviewToolAction({ ...input, settings })).decision).toBe("allow");
+    expect(mocks.getModelClient).toHaveBeenCalledWith(settings.selectedModel, expect.objectContaining({ enablePersonalMode: true, proModelUsage: "api-key" }));
+  });
   it.each(["garbage", '{"decision":"allow"}'])(
     "blocks invalid shell verdict %s",
     async (text) => {

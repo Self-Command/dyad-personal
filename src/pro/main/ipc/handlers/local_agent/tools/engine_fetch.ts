@@ -69,6 +69,9 @@ export async function engineFetch(
   }
 
   const settings = readSettings();
+  if (settings.enablePersonalMode) {
+    throw new DyadError("Official Engine tools are unavailable in Personal mode. Use a self-hosted MCP service or disable Personal mode with a valid official subscription.", DyadErrorKind.Precondition);
+  }
   const apiKey = settings.providerSettings?.auto?.apiKey?.value;
 
   if (!apiKey) {

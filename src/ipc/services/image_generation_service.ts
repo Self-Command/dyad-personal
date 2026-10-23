@@ -145,6 +145,9 @@ export class ImageGenerationService {
     controller: AbortController,
   ) {
     const settings = readSettings();
+    if (settings.enablePersonalMode) {
+      throw new DyadError("Image generation requires the official Engine. In Personal mode, connect an image-generation MCP server instead.", DyadErrorKind.Precondition);
+    }
     const apiKey = settings.providerSettings?.auto?.apiKey?.value;
 
     if (!apiKey) {

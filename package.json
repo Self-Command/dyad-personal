@@ -1,6 +1,6 @@
 {
-  "name": "dyad",
-  "version": "1.20.0",
+  "name": "dyad-personal",
+  "version": "1.20.0-personal.1",
   "description": "Free, local, open-source AI app builder",
   "keywords": [],
   "license": "MIT",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dyad-sh/dyad.git"
+    "url": "https://github.com/Self-Command/dyad-personal.git"
   },
   "main": ".vite/build/main_bootstrap.js",
   "scripts": {
@@ -220,5 +220,5 @@
   "engines": {
     "node": ">=24 <26"
   },
-  "productName": "dyad"
+  "productName": "Dyad Personal"
 }

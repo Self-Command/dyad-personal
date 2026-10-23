@@ -21,6 +21,7 @@ export function useFreeAgentQuota() {
   const { settings } = useSettings();
   const queryClient = useQueryClient();
   const isPro = settings ? isDyadProEnabled(settings) : false;
+  const isPersonal = !!settings?.enablePersonalMode;
   const isTestMode = settings?.isTestMode ?? false;
 
   const {
@@ -31,7 +32,7 @@ export function useFreeAgentQuota() {
     queryKey: queryKeys.freeAgentQuota.status,
     queryFn: () => ipc.freeAgentQuota.getFreeAgentQuotaStatus(),
     // Only fetch for non-Pro users
-    enabled: !isPro && !!settings,
+    enabled: !isPro && !isPersonal && !!settings,
     // Refetch periodically to check for quota reset
     refetchInterval: THIRTY_MINUTES_IN_MS,
     // Consider stale after 30 seconds (500ms in test mode for faster E2E tests)
@@ -52,7 +53,7 @@ export function useFreeAgentQuota() {
     error,
     invalidateQuota,
     // Convenience properties for easier consumption
-    isQuotaExceeded: quotaStatus?.isQuotaExceeded ?? false,
+    isQuotaExceeded: !isPersonal && (quotaStatus?.isQuotaExceeded ?? false),
     messagesUsed: quotaStatus?.messagesUsed ?? 0,
     messagesLimit: quotaStatus?.messagesLimit ?? FREE_AGENT_QUOTA_LIMIT,
     messagesRemaining: quotaStatus

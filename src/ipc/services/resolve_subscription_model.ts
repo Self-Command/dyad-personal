@@ -1,6 +1,7 @@
 import { getLanguageModelProviders } from "../shared/language_model_helpers";
 import {
   isDyadProEnabled,
+  isPersonalMode,
   type ModelSelection,
   type UserSettings,
 } from "@/lib/schemas";
@@ -19,6 +20,16 @@ export async function resolveSubscriptionModel(
   settings: UserSettings,
 ): Promise<ModelSelection> {
   const { connection: _legacyConnection, ...identity } = model;
+  if (isPersonalMode(settings)) {
+    if (model.provider === "claude-code" ||
+        (model.provider === "auto" && model.name !== "auto" && model.name !== "free")) {
+      throw new DyadError(
+        "Personal mode uses your API keys or local models. Choose a configured provider, or disable Personal mode to use official services or subscriptions.",
+        DyadErrorKind.Validation,
+      );
+    }
+    return { ...identity, connection: "api-key" };
+  }
   if (settings.proModelUsage === "api-key") {
     if (model.provider === "auto" && ["value", "free-pro"].includes(model.name))
       throw new DyadError(

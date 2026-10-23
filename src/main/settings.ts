@@ -46,6 +46,7 @@ const logger = log.scope("settings");
 // readSettings instead of using this directly.)
 export const DEFAULT_SETTINGS: UserSettings = {
   chatgptFastMode: false,
+  enablePersonalMode: true,
   selectedModel: {
     name: "auto",
     provider: "auto",
@@ -60,7 +61,7 @@ export const DEFAULT_SETTINGS: UserSettings = {
   selectedChatMode: "build",
   enableAppBlueprint: true,
   enableTestingForNewApps: DEFAULT_ENABLE_TESTING_FOR_NEW_APPS,
-  enableAutoUpdate: true,
+  enableAutoUpdate: false,
   releaseChannel: "stable",
   selectedTemplateId: DEFAULT_TEMPLATE_ID,
   selectedThemeId: DEFAULT_THEME_ID,

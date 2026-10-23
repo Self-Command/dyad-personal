@@ -75,7 +75,7 @@ export function buildMcpAutoApprove(params: {
 }): (() => Promise<McpAutoApproveResult>) | undefined {
   if (
     !params.settings.autoApproveSafeMcpTools ||
-    !params.isDyadPro ||
+    (!params.isDyadPro && !params.settings.enablePersonalMode) ||
     params.freeModelMode
   ) {
     return undefined;

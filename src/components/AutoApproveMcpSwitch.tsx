@@ -20,7 +20,7 @@ export function AutoApproveMcpSwitch() {
           }}
         />
         <Label htmlFor="enable-auto-approve-safe-mcp-tools">
-          Skip consent for safe MCP tools (Pro)
+          Skip consent for safe MCP tools (your model / Pro)
         </Label>
       </div>
       <div className="text-sm text-gray-500 dark:text-gray-400">

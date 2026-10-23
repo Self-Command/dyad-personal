@@ -1,34 +1,13 @@
-# Dyad
+# Dyad Personal
 
-Dyad is a local, open-source AI app builder. It's fast, private, and fully under your control — like Lovable, v0, or Bolt, but running right on your machine.
+Independent personal distribution based on [Dyad v1.20.0](https://github.com/dyad-sh/dyad/releases/tag/v1.20.0).
 
-[![Image](https://github.com/user-attachments/assets/f6c83dfc-6ffd-4d32-93dd-4b9c46d17790)](https://dyad.sh/)
+[Downloads](https://github.com/Self-Command/dyad-personal/releases) · [Personal setup and release instructions](docs/PERSONAL.md) · [Pro capability audit and limitations](docs/PRO-AUDIT.md)
 
-More info at: [https://dyad.sh/](https://dyad.sh/)
+Use your own model API or a self-hosted provider with the local Agent, reviewed Shell and TypeScript code explorer. No official subscription status is fabricated; official hosted services retain their own authentication and billing.
 
-## 🚀 Features
+Windows x64, macOS x64/arm64 and Linux x64 builds run in GitHub Actions. Push a version-matching `vX.Y.Z-personal.N` tag to validate, build, smoke-test and publish installers. Personal builds update manually through this repository's Releases.
 
-- ⚡️ **Local**: Fast, private and no lock-in.
-- 🛠 **Bring your own keys**: Use your own AI API keys — no vendor lock-in.
-- 🖥️ **Cross-platform**: Easy to run on Mac or Windows.
+## Upstream licenses
 
-## 📦 Download
-
-No sign-up required. Just download and go.
-
-### [👉 Download for your platform](https://www.dyad.sh/#download)
-
-## 🤝 Community
-
-Join our growing community of AI app builders on **Reddit**: [r/dyadbuilders](https://www.reddit.com/r/dyadbuilders/) - share your projects and get help from the community!
-
-## 🛠️ Contributing
-
-**Dyad** is open-source (see License info below).
-
-If you're interested in contributing to dyad, please read our [contributing](./CONTRIBUTING.md) doc.
-
-## License
-
-- All the code in this repo outside of `src/pro` is open-source and licensed under Apache 2.0 - see [LICENSE](./LICENSE).
-- All the code in this repo within `src/pro` is fair-source and licensed under [Functional Source License 1.1 Apache 2.0](https://fsl.software/) - see [LICENSE](./src/pro/LICENSE).
+Preserved upstream history, copyrights and notices. Code outside `src/pro` is [Apache-2.0](LICENSE); `src/pro` is [FSL-1.1-ALv2](src/pro/LICENSE). This is an independent personal/internal-use customization, not an official Dyad release.

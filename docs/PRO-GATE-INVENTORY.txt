@@ -1,0 +1,176 @@
+src\app\TitleBar.tsx:87:  const isDyadProEnabled = Boolean(settings?.enableDyadPro);
+src\app\TitleBar.tsx:141:          {isDyadPro && <DyadProButton isDyadProEnabled={isDyadProEnabled} />}
+src\app\TitleBar.tsx:241:  isDyadProEnabled,
+src\app\TitleBar.tsx:243:  isDyadProEnabled: boolean;
+src\app\TitleBar.tsx:259:        isDyadProEnabled &&
+src\app\TitleBar.tsx:264:      {isDyadProEnabled
+src\app\TitleBar.tsx:269:      {userBudget && isDyadProEnabled && (
+src\main\pro.ts:19:    enableDyadPro: true,
+src\ipc\utils\cloud_sandbox_provider.ts:236:    throw new Error("Dyad Pro API key is required for cloud sandboxes.");
+src\ipc\utils\get_model_client.ts:196:  if (selectedModelSelection.connection === "pro" && !settings.enableDyadPro && !settings.enablePersonalMode)
+src\ipc\utils\get_model_client.ts:255:  const dyadApiKey = settings.enableDyadPro && !settings.enablePersonalMode
+src\ipc\utils\get_model_client.ts:262:  const isDyadProEnabledForRequest = Boolean(
+src\ipc\utils\get_model_client.ts:263:    dyadApiKey && settings.enableDyadPro,
+src\ipc\utils\get_model_client.ts:265:  if (connection === "pro" && !isDyadProEnabledForRequest)
+src\ipc\utils\get_model_client.ts:274:    !isDyadProEnabledForRequest
+src\ipc\utils\get_model_client.ts:277:      "Auto (balanced) requires Dyad Pro. Switch to another model or enable Dyad Pro.",
+src\ipc\utils\get_model_client.ts:292:  if (isFreeProModel(model) && (!settings.enableDyadPro || !dyadApiKey)) {
+src\ipc\utils\get_model_client.ts:301:    isDyadProEnabledForRequest &&
+src\ipc\utils\get_model_client.ts:334:    isDyadProEnabledForRequest &&
+src\ipc\utils\get_model_client.ts:463:          !isDyadProEnabledForRequest &&
+src\ipc\handlers\debug_handlers.ts:219:    enableDyadPro: settings.enableDyadPro ?? null,
+src\ipc\types\misc.ts:93:  enableDyadPro: z.boolean().nullable(),
+src\utils\codebase.ts:488:    !settings?.enablePersonalMode && settings?.enableDyadPro && settings?.enableProSmartFilesContextMode;
+src\components\ChatPanel.tsx:37:import { isDyadProEnabled } from "@/lib/schemas";
+src\components\ChatPanel.tsx:106:    !isDyadProEnabled(settings) &&
+src\components\ChatModeSelector.tsx:16:import { isDyadProEnabled } from "@/lib/schemas";
+src\components\ChatModeSelector.tsx:41:  const isProEnabled = settings ? isDyadProEnabled(settings) : false;
+src\lib\schemas.ts:552:  enableDyadPro: z.boolean().optional(),
+src\lib\schemas.ts:740:export function isDyadProEnabled(settings: UserSettings): boolean {
+src\lib\schemas.ts:741:  return settings.enableDyadPro === true && hasDyadProKey(settings);
+src\lib\schemas.ts:779:  const isPro = isDyadProEnabled(settings);
+src\lib\schemas.ts:803:    !isDyadProEnabled(settings) &&
+src\lib\schemas.ts:834:    isDyadProEnabled(settings) &&
+src\ipc\handlers\compaction\compaction_handler.ts:44:import { isDyadProEnabled } from "@/lib/schemas";
+src\ipc\handlers\compaction\compaction_handler.ts:213:    const compactionModel = !storedSettings.enablePersonalMode && isDyadProEnabled(storedSettings)
+src\lib\issueBody.ts:364:    `- Dyad Pro Enabled: ${settings.enableDyadPro ?? "n/a"}`,
+src\ipc\handlers\chat_stream_handlers.ts:165:  isDyadProEnabled,
+src\ipc\handlers\chat_stream_handlers.ts:1616:          enableDyadPro: current.enableDyadPro,
+src\ipc\handlers\chat_stream_handlers.ts:1871:      if (settings.enableDyadPro) {
+src\ipc\handlers\chat_stream_handlers.ts:2201:          isDyadProEnabled(settings) &&
+src\ipc\handlers\chat_stream_handlers.ts:2209:          isDyadProEnabled(settings) &&
+src\ipc\handlers\chat_stream_handlers.ts:2213:          isDyadProEnabled(settings) &&
+src\lib\auxiliaryModel.ts:1:import { isDyadProEnabled, isPersonalMode, type UserSettings } from "./schemas";
+src\lib\auxiliaryModel.ts:8:  return settings.proModelUsage === "api-key" && isDyadProEnabled(settings)
+src\hooks\subagentReviewOrchestration.ts:8:import { isDyadProEnabled } from "@/lib/schemas";
+src\hooks\subagentReviewOrchestration.ts:188:          isDyadProEnabled(currentSettings) &&
+src\pro\main\ipc\handlers\themes_handlers.ts:620:      if (!settings.enableDyadPro || settings.enablePersonalMode) {
+src\pro\main\ipc\handlers\themes_handlers.ts:622:          "Dyad Pro is required for AI theme generation. Please enable Dyad Pro in Settings.",
+src\pro\main\ipc\handlers\themes_handlers.ts:774:      if (!settings.enableDyadPro || settings.enablePersonalMode) {
+src\pro\main\ipc\handlers\themes_handlers.ts:776:          "Dyad Pro is required for AI theme generation. Please enable Dyad Pro in Settings.",
+src\pro\main\ipc\handlers\themes_handlers.ts:844:        throw new DyadError("Dyad Pro API key is required", DyadErrorKind.Auth);
+src\pro\main\ipc\handlers\local_agent\tool_definitions.ts:734:      isDyadPro: ctx.isDyadPro,
+src\pro\main\ipc\handlers\local_agent\tool_definitions.ts:745:  if ((ctx.inferenceSettings ?? readSettings()).enablePersonalMode && tool.usesEngineEndpoint) return false;
+src\pro\main\ipc\handlers\local_agent\tool_definitions.ts:769:  if (options.freeModelMode && tool.usesEngineEndpoint) {
+src\pro\main\ipc\handlers\local_agent\tool_definitions.ts:772:  if (tool.subagentOnly && !ctx.isDyadPro) {
+src\ipc\handlers\token_count_handlers.ts:39:  isDyadProEnabled,
+src\ipc\handlers\token_count_handlers.ts:131:          isDyadProEnabled(settings) &&
+src\ipc\handlers\token_count_handlers.ts:195:      const isDyadPro = !settings.enablePersonalMode && isDyadProEnabled(settings);
+src\ipc\handlers\free_model_quota_handlers.ts:8:import { isDyadProEnabled } from "@/lib/schemas";
+src\ipc\handlers\free_model_quota_handlers.ts:31:  if (!settings.enableDyadPro || !isDyadProEnabled(settings) || !apiKey) {
+src\hooks\useFreeModelQuota.ts:5:import { isDyadProEnabled } from "@/lib/schemas";
+src\hooks\useFreeModelQuota.ts:19:  const isPro = settings ? isDyadProEnabled(settings) : false;
+src\ipc\handlers\pro_handlers.ts:216:      if (!apiKey || !settings.enableDyadPro) {
+src\hooks\useFreeAgentQuota.ts:5:import { isDyadProEnabled } from "@/lib/schemas";
+src\hooks\useFreeAgentQuota.ts:23:  const isPro = settings ? isDyadProEnabled(settings) : false;
+src\hooks\useFixPreCommitWithAI.ts:13:import { isDyadProEnabled } from "@/lib/schemas";
+src\hooks\useFixPreCommitWithAI.ts:62:  const isPro = settings ? isDyadProEnabled(settings) : false;
+src\pro\main\ipc\handlers\local_agent\tools\web_search.ts:9:import { engineFetch } from "./engine_fetch";
+src\pro\main\ipc\handlers\local_agent\tools\web_search.ts:108:  const response = await engineFetch(ctx, "/tools/web-search", {
+src\pro\main\ipc\handlers\local_agent\tools\web_search.ts:179:  usesEngineEndpoint: true,
+src\pro\main\ipc\handlers\local_agent\tools\web_search.ts:182:  isEnabled: (ctx) => ctx.isDyadPro,
+src\pro\main\ipc\handlers\local_agent\tools\web_fetch.ts:4:import { engineFetch } from "./engine_fetch";
+src\pro\main\ipc\handlers\local_agent\tools\web_fetch.ts:68:  const response = await engineFetch(ctx, "/tools/web-crawl", {
+src\pro\main\ipc\handlers\local_agent\tools\web_fetch.ts:89:  usesEngineEndpoint: true,
+src\pro\main\ipc\handlers\local_agent\tools\web_fetch.ts:92:  isEnabled: (ctx) => ctx.isDyadPro,
+src\pro\main\ipc\handlers\local_agent\tools\web_crawl.ts:4:import { engineFetch } from "./engine_fetch";
+src\pro\main\ipc\handlers\local_agent\tools\web_crawl.ts:91:  const response = await engineFetch(ctx, "/tools/web-crawl", {
+src\pro\main\ipc\handlers\local_agent\tools\web_crawl.ts:112:  usesEngineEndpoint: true,
+src\pro\main\ipc\handlers\local_agent\tools\web_crawl.ts:115:  isEnabled: (ctx) => ctx.isDyadPro,
+src\pro\main\ipc\handlers\local_agent\tools\types.ts:541:  readonly usesEngineEndpoint?: boolean;
+src\ipc\services\app_runtime_service.ts:120:      return "Dyad Pro is required to use cloud sandboxes.";
+src\pro\main\ipc\handlers\local_agent\tools\subagent_tools.ts:253:  usesEngineEndpoint: true,
+src\pro\main\ipc\handlers\local_agent\tools\subagent_tools.ts:256:      ctx.isDyadPro &&
+src\pro\main\ipc\handlers\local_agent\tools\subagent_tools.ts:353:    ctx.isDyadPro && ctx.canUseAdvancedSubagentTools && !ctx.subagentThreadId,
+src\pro\main\ipc\handlers\local_agent\tools\subagent_tools.ts:440:  usesEngineEndpoint: true,
+src\pro\main\ipc\handlers\local_agent\tools\run_shell.ts:4:import { isDyadProEnabled } from "@/lib/schemas";
+src\pro\main\ipc\handlers\local_agent\tools\run_shell.ts:55:      isDyadPro: ctx.isDyadPro,
+src\pro\main\ipc\handlers\local_agent\tools\run_shell.ts:86:        isDyadPro: ctx.isDyadPro && isDyadProEnabled(settings),
+src\hooks\useTrialModelRestriction.ts:4:import { isDyadProEnabled } from "../lib/schemas";
+src\hooks\useTrialModelRestriction.ts:13:    (userBudget?.isTrial && settings && isDyadProEnabled(settings)) ?? false;
+src\ipc\services\subscription_turn_preflight.ts:2:  isDyadProEnabled,
+src\ipc\services\subscription_turn_preflight.ts:70:    !isPersonalMode(settings) && isDyadProEnabled(settings) &&
+src\ipc\services\subscription_billing.ts:1:import { isDyadProEnabled, type UserSettings } from "@/lib/schemas";
+src\ipc\services\subscription_billing.ts:6:    isDyadProEnabled(settings) &&
+src\components\chat\ChatInput.tsx:115:import { isDyadProEnabled, isLocalAgentBackedMode } from "@/lib/schemas";
+src\components\chat\ChatInput.tsx:327:  const isProEnabled = settings ? isDyadProEnabled(settings) : false;
+src\components\chat\ChatInput.tsx:871:          isDyadProEnabled={isProEnabled}
+src\ipc\services\resolve_subscription_model.ts:3:  isDyadProEnabled,
+src\ipc\services\resolve_subscription_model.ts:48:  const proEnabled = isDyadProEnabled(settings);
+src\ipc\services\provider_api_key_validation_service.ts:154:          enableDyadPro: true,
+src\hooks\useChatModeToggle.ts:6:  isDyadProEnabled,
+src\hooks\useChatModeToggle.ts:72:      canUseBasicAgent: isDyadProEnabled(settings) || !isQuotaExceeded,
+src\components\chat\ChatErrorBox.tsx:29:  isDyadProEnabled,
+src\components\chat\ChatErrorBox.tsx:35:  isDyadProEnabled: boolean;
+src\components\chat\ChatErrorBox.tsx:100:    !isDyadProEnabled &&
+src\components\chat\ChatErrorBox.tsx:124:  if (isDyadProEnabled && error.includes("ExceededBudget:")) {
+src\components\chat\ChatErrorBox.tsx:222:        {!isDyadProEnabled &&
+src\components\chat\ChatErrorBox.tsx:232:        {isDyadProEnabled && onStartNewChat && (
+src\components\chat\HomeChatInput.tsx:55:  const isProEnabled = !!userBudget && !!settings?.enableDyadPro;
+src\pro\main\ipc\handlers\local_agent\tools\mcp_type_defs.ts:232:        isDyadPro: params.ctx.isDyadPro,
+src\ipc\services\image_generation_service.ts:155:        "Dyad Pro API key is required for image generation",
+src\ipc\services\external_model_usage.ts:7:import { isDyadProEnabled } from "@/lib/schemas";
+src\ipc\services\external_model_usage.ts:60:    !isDyadProEnabled(settings)
+src\pro\main\ipc\handlers\local_agent\tools\code_search.ts:10:import { engineFetch } from "./engine_fetch";
+src\pro\main\ipc\handlers\local_agent\tools\code_search.ts:66:  const response = await engineFetch(ctx, "/tools/code-search", {
+src\pro\main\ipc\handlers\local_agent\tools\code_search.ts:107:  usesEngineEndpoint: true,
+src\pro\main\ipc\handlers\local_agent\tools\code_search.ts:112:  isEnabled: (ctx) => ctx.isDyadPro,
+src\pro\main\ipc\handlers\local_agent\tools\generate_image.ts:12:import { engineFetch } from "./engine_fetch";
+src\pro\main\ipc\handlers\local_agent\tools\generate_image.ts:54:  const response = await engineFetch(ctx, "/images/generations", {
+src\pro\main\ipc\handlers\local_agent\tools\generate_image.ts:125:  usesEngineEndpoint: true,
+src\pro\main\ipc\handlers\local_agent\tools\generate_image.ts:127:  isEnabled: (ctx) => ctx.isDyadPro,
+src\components\chat\SubagentTeamCard.tsx:30:import { isDyadProEnabled } from "@/lib/schemas";
+src\components\chat\SubagentTeamCard.tsx:61:  const isPro = settings ? isDyadProEnabled(settings) : false;
+src\pro\main\ipc\handlers\local_agent\local_agent_handler.ts:39:  isDyadProEnabled,
+src\pro\main\ipc\handlers\local_agent\local_agent_handler.ts:803:    !isDyadProEnabled(settings) &&
+src\pro\main\ipc\handlers\local_agent\local_agent_handler.ts:809:        ? "Referencing other apps (@app:Name) in local-agent mode requires Dyad Pro. Please enable Dyad Pro in Settings → Pro."
+src\pro\main\ipc\handlers\local_agent\local_agent_handler.ts:810:        : "Agent v2 requires Dyad Pro. Please enable Dyad Pro in Settings → Pro.";
+src\pro\main\ipc\handlers\local_agent\local_agent_handler.ts:1045:      isDyadPro: !settings.enablePersonalMode && isDyadProEnabled(settings),
+src\pro\main\ipc\handlers\local_agent\local_agent_handler.ts:1048:        isDyadProEnabled(settings) &&
+src\pro\main\ipc\handlers\local_agent\local_agent_handler.ts:1053:        isDyadProEnabled(settings) &&
+src\pro\main\ipc\handlers\local_agent\local_agent_handler.ts:1059:        isDyadProEnabled(settings) &&
+src\pro\main\ipc\handlers\local_agent\local_agent_handler.ts:2437:      isDyadProEnabled(settings) &&
+src\pro\main\ipc\handlers\local_agent\local_agent_handler.ts:2941:                isDyadPro: ctx.isDyadPro,
+src\pro\main\ipc\handlers\local_agent\agent_tool_handlers.ts:16:import { isDyadProEnabled } from "@/lib/schemas";
+src\pro\main\ipc\handlers\local_agent\agent_tool_handlers.ts:49:      (tool) => isDyadProEnabled(settings) || !tool.subagentOnly,
+src\components\SetupBanner.tsx:30:import { isDyadProEnabled } from "@/lib/schemas";
+src\components\SetupBanner.tsx:47:  const hasPro = settings && isDyadProEnabled(settings);
+src\pro\main\ipc\handlers\local_agent\subagents\subagent_manager.ts:34:import { isDyadProEnabled, type UserSettings } from "@/lib/schemas";
+src\pro\main\ipc\handlers\local_agent\subagents\subagent_manager.ts:904:  const isPro = isDyadProEnabled(settings);
+src\pro\main\ipc\handlers\local_agent\subagents\subagent_manager.ts:1665:      isDyadProEnabled(readSettings()) ? "failed" : "entitlement_revoked",
+src\pro\main\ipc\handlers\local_agent\subagents\subagent_manager.ts:1755:      isDyadProEnabled(readSettings()) ? "failed" : "entitlement_revoked",
+src\pro\main\ipc\handlers\local_agent\subagents\subagent_manager.ts:2326:  if (!isDyadProEnabled(readSettings())) {
+src\pro\main\ipc\handlers\local_agent\subagents\subagent_manager.ts:2700:    if (isDyadProEnabled(readSettings())) return;
+src\pro\main\ipc\handlers\local_agent\tools\explore_code_subagent.ts:379:  if (!settings.enableDyadPro || !settings.providerSettings?.auto?.apiKey) {
+src\pro\main\ipc\handlers\local_agent\tools\explore_code_subagent.ts:381:      "explore_code sub-agent requires Dyad Pro with an auto provider API key",
+src\pro\main\ipc\handlers\local_agent\tools\explore_code.ts:24:  if (!ctx.isDyadPro && !(ctx.inferenceSettings ?? readSettings()).enablePersonalMode) {
+src\pro\main\ipc\handlers\local_agent\tools\explore_chat_history.ts:57:  usesEngineEndpoint: true,
+src\pro\main\ipc\handlers\local_agent\tools\explore_chat_history.ts:59:  isEnabled: (ctx) => ctx.isDyadPro && !ctx.subagentThreadId,
+src\pro\main\ipc\handlers\local_agent\tools\explore_chat_history_subagent.ts:211:  if (!ctx.isDyadPro || !settings.enableDyadPro) {
+src\pro\main\ipc\handlers\local_agent\tools\explore_chat_history_subagent.ts:213:      "explore_chat_history requires Dyad Pro",
+src\components\DefaultChatModeSelector.tsx:12:import { isDyadProEnabled, getEffectiveDefaultChatMode } from "@/lib/schemas";
+src\components\DefaultChatModeSelector.tsx:43:  const isProEnabled = isDyadProEnabled(settings);
+src\pro\main\ipc\handlers\local_agent\tools\engine_fetch.ts:58:export async function engineFetch(
+src\pro\main\ipc\handlers\local_agent\tools\engine_fetch.ts:78:    throw new DyadError("Dyad Pro API key is required", DyadErrorKind.Auth);
+src\hooks\useLanguageModelProviders.ts:4:import { cloudProviders, isDyadProEnabled } from "@/lib/schemas";
+src\hooks\useLanguageModelProviders.ts:45:        (!isDyadProEnabled(settings) &&
+src\components\settings\SubagentSettings.tsx:1:import { isDyadProEnabled } from "@/lib/schemas";
+src\components\settings\SubagentSettings.tsx:51:  if (!settings || settings.enablePersonalMode || !isDyadProEnabled(settings)) return null;
+src\components\settings\SubagentSettings.tsx:77:  if (!settings || settings.enablePersonalMode || !isDyadProEnabled(settings)) return null;
+src\components\settings\ProviderSettingsPage.tsx:260:        settingsUpdate.enableDyadPro = true;
+src\components\settings\ProviderSettingsPage.tsx:350:        enableDyadPro: enabled,
+src\components\settings\ProviderSettingsPage.tsx:577:                checked={settings?.enableDyadPro}
+src\components\ProModeSelector.tsx:39:      enableDyadPro: !settings?.enableDyadPro,
+src\components\ProModeSelector.tsx:152:            settingEnabled={Boolean(settings?.enableDyadPro)}
+src\components\SubscriptionModelMenu.tsx:15:import { isDyadProEnabled } from "@/lib/schemas";
+src\components\SubscriptionModelMenu.tsx:38:  const hasPro = settings && isDyadProEnabled(settings);
+src\components\ModelPicker.tsx:15:import { isDyadProEnabled, type LargeLanguageModel } from "@/lib/schemas";
+src\components\ModelPicker.tsx:379:        isDyadPro: settings ? isDyadProEnabled(settings) : false,
+src\components\ModelPicker.tsx:399:  const dyadProEnabled = settings ? isDyadProEnabled(settings) : false;
+src\components\ModelPicker.tsx:1177:            : `${model.displayName} — requires Dyad Pro or an API key from ${getProviderDisplayName(providerId)}`
+src\components\SubscriptionConnectionStatus.tsx:19:import { isDyadProEnabled } from "@/lib/schemas";
+src\components\SubscriptionConnectionStatus.tsx:24:  const hasPro = settings && isDyadProEnabled(settings);
+src\components\SubscriptionConnectionStatus.tsx:168:      {!isDyadProEnabled(settings) && (
+src\components\SubscriptionConnectionStatus.tsx:175:      {isDyadProEnabled(settings) && (
+src\components\ShellExperimentSwitch.tsx:4:import { isDyadProEnabled } from "@/lib/schemas";
+src\components\ShellExperimentSwitch.tsx:8:  const canUseShell = !!settings && (settings.enablePersonalMode || isDyadProEnabled(settings));

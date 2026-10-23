@@ -48,7 +48,6 @@ export const runShellTool: ToolDefinition<z.infer<typeof schema>> = {
   inputSchema: schema,
   modifiesState: true,
   mutationTracking: "internal",
-  usesEngineEndpoint: true,
   defaultConsent: "always",
   isEnabled: (ctx) =>
     isShellExperimentAvailable({
@@ -90,7 +89,7 @@ export const runShellTool: ToolDefinition<z.infer<typeof schema>> = {
       });
     };
     if (!available())
-      return blocked("The shell experiment or Pro Host access is disabled.");
+      return blocked("The shell experiment or Host runtime access is disabled.");
     if (ctx.abortSignal?.aborted)
       return JSON.stringify({ status: "cancelled" });
     present("reviewing", "Checking command safety…");
@@ -139,7 +138,7 @@ export const runShellTool: ToolDefinition<z.infer<typeof schema>> = {
     if (decision.decision === "block") return blocked(decision.reason);
     const approved = await ctx.requireConsent({
       toolName: "run_shell",
-      ...(decision.decision === "ask"
+      ...((ctx.inferenceSettings ?? readSettings()).enablePersonalMode || decision.decision === "ask"
         ? { confirmation: "shell-approval" as const }
         : {}),
       toolDescription: decision.reason,
