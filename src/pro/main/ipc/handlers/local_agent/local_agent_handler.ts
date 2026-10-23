@@ -800,7 +800,7 @@ export async function handleLocalAgentStream(
     !readOnly &&
     !planModeOnly &&
     !settings.enablePersonalMode &&
-    !!settings.enablePersonalMode && isDyadProEnabled(settings) &&
+    !isDyadProEnabled(settings) &&
     selectedModel.provider !== "claude-code" &&
     !isBasicAgentMode(settings)
   ) {
@@ -2430,7 +2430,6 @@ export async function handleLocalAgentStream(
       !planModeOnly &&
       (workspaceChanged || ctx.mcpToolRan === true);
     const reviewBarrierRequested =
-      !settings.enablePersonalMode &&
       !buildMode &&
       workspaceChanged &&
       !hitStepLimit &&
