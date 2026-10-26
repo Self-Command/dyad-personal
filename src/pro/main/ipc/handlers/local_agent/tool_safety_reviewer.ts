@@ -74,32 +74,49 @@ export async function reviewToolAction<D extends "ask" | "block">({
       state.phase = "model setup";
       const personal = isPersonalMode(settings);
       const reviewModel = personal
-        ? settings.personalSafetyReviewModel ?? settings.selectedModel
+        ? (settings.personalSafetyReviewModel ?? settings.selectedModel)
         : { name: "gpt-6-luna", provider: "openai" };
       const auxiliary = getAuxiliarySettings(settings);
-      const { modelClient, runtimeModel } = await getModelClient(reviewModel, auxiliary);
-      const personalOptions = personal ? await (async () => {
-      const selection = modelClient.getRuntimeModel?.() ?? await resolveModelSelection({
-        model: runtimeModel ?? reviewModel,
-        preferredEffortLevel: personal && settings.personalSafetyReviewModel
-          ? settings.personalSafetyReviewModel.effortLevel
-          : settings.modelEffortPreferences?.[getModelPreferenceKey(reviewModel)],
-      });
-      const [maxOutputTokens, temperature] = await Promise.all([
-        getMaxTokens(selection), getTemperature(selection),
-      ]);
-      return {
-          providerOptions: getProviderOptions({
-            dyadAppId: 0, files: [], mentionedAppsCodebases: [], dyadDisableFiles: true,
-            builtinProviderId: modelClient.builtinProviderId,
-            reasoningEffortProviderId: modelClient.reasoningEffortProviderId,
-            modelSelection: selection,
-          }),
-          headers: getAiHeaders({ builtinProviderId: modelClient.builtinProviderId }),
-          maxOutputTokens,
-          temperature,
-      };
-      })() : {};
+      const { modelClient, runtimeModel } = await getModelClient(
+        reviewModel,
+        auxiliary,
+      );
+      const personalOptions = personal
+        ? await (async () => {
+            const selection =
+              modelClient.getRuntimeModel?.() ??
+              (await resolveModelSelection({
+                model: runtimeModel ?? reviewModel,
+                preferredEffortLevel:
+                  personal && settings.personalSafetyReviewModel
+                    ? settings.personalSafetyReviewModel.effortLevel
+                    : settings.modelEffortPreferences?.[
+                        getModelPreferenceKey(reviewModel)
+                      ],
+              }));
+            const [maxOutputTokens, temperature] = await Promise.all([
+              getMaxTokens(selection),
+              getTemperature(selection),
+            ]);
+            return {
+              providerOptions: getProviderOptions({
+                dyadAppId: 0,
+                files: [],
+                mentionedAppsCodebases: [],
+                dyadDisableFiles: true,
+                builtinProviderId: modelClient.builtinProviderId,
+                reasoningEffortProviderId:
+                  modelClient.reasoningEffortProviderId,
+                modelSelection: selection,
+              }),
+              headers: getAiHeaders({
+                builtinProviderId: modelClient.builtinProviderId,
+              }),
+              maxOutputTokens,
+              temperature,
+            };
+          })()
+        : {};
       controller.signal.throwIfAborted();
       state.phase = "generation";
       const stream = streamText({
@@ -112,7 +129,9 @@ export async function reviewToolAction<D extends "ask" | "block">({
         messages: [{ role: "user", content: payload }],
         // stream.text can reject with a generic NoOutputGeneratedError. Preserve
         // the original provider failure without logging raw request/response data.
-        onError: ({ error }) => { streamError ??= error; },
+        onError: ({ error }) => {
+          streamError ??= error;
+        },
         ...(tools
           ? {
               tools,

@@ -6,7 +6,10 @@ import { SafetyReviewModelSettings } from "./SafetyReviewModelSettings";
 
 const mocks = vi.hoisted(() => ({
   update: vi.fn(async () => {}),
-  probe: vi.fn(async () => ({ available: true, reason: "连接正常，未执行命令" })),
+  probe: vi.fn(async () => ({
+    available: true,
+    reason: "连接正常，未执行命令",
+  })),
   settings: {
     enablePersonalMode: true,
     selectedModel: { provider: "chat-provider", name: "chat-model" },
@@ -47,7 +50,10 @@ vi.mock("@/hooks/useLanguageModelsByProviders", () => ({
   }),
 }));
 
-vi.mock("@/ipc/types", async (original) => ({ ...await original<typeof import("@/ipc/types")>(), ipc: { settings: { testPersonalSafetyReview: mocks.probe } } }));
+vi.mock("@/ipc/types", async (original) => ({
+  ...(await original<typeof import("@/ipc/types")>()),
+  ipc: { settings: { testPersonalSafetyReview: mocks.probe } },
+}));
 
 beforeEach(() => {
   mocks.update.mockClear();
@@ -58,7 +64,9 @@ afterEach(cleanup);
 describe("Personal review configuration", () => {
   it("lets the user test the saved review configuration without submitting a shell command", async () => {
     render(<SafetyReviewModelSettings />);
-    await userEvent.click(screen.getByRole("button", { name: "测试已保存的审查连接" }));
+    await userEvent.click(
+      screen.getByRole("button", { name: "测试已保存的审查连接" }),
+    );
     expect(mocks.probe).toHaveBeenCalled();
     expect(await screen.findByRole("status")).toHaveTextContent("未执行命令");
   });
