@@ -22,6 +22,9 @@ import {
 describe("user-input preload channels", () => {
   it("allows the typed Personal reviewer connectivity probe", () => {
     expect(VALID_INVOKE_CHANNELS).toContain(settingsContracts.testPersonalSafetyReview.channel);
+    expect(settingsContracts.testPersonalSafetyReview.input.safeParse({ command: "execute something" }).success).toBe(false);
+    expect(settingsContracts.setUserSettings.input.safeParse({ personalSafetyReviewTimeoutSeconds: 1 }).success).toBe(false);
+    expect(settingsContracts.setUserSettings.input.safeParse({ personalSafetyReviewTimeoutSeconds: 90, personalSafetyReviewModel: { provider: "custom::review", name: "model", effortLevel: "low" } }).success).toBe(true);
   });
   it("allows every user-input invoke and receive contract", () => {
     for (const contract of Object.values(userInputContracts)) {

@@ -327,10 +327,22 @@ it("preserves actual provider HTTP errors from the streaming SDK without exposin
   const actual = await vi.importActual<typeof import("ai")>("ai");
   mocks.streamText.mockImplementation(actual.streamText);
   const requests: unknown[] = [];
+  let rejectProvider = true;
   const server = createServer(async (request, response) => {
     const chunks: Buffer[] = [];
     for await (const chunk of request) chunks.push(Buffer.from(chunk));
     requests.push(JSON.parse(Buffer.concat(chunks).toString()));
+    if (!rejectProvider) {
+      response.writeHead(200, { "Content-Type": "text/event-stream" });
+      const chunks = [
+        { delta: { role: "assistant", content: "" }, finish_reason: null },
+        { delta: { content: '{"decision":"allow","reason":"Shallow source clone only; no code execution"}' }, finish_reason: null },
+        { delta: {}, finish_reason: "stop" },
+      ];
+      for (const chunk of chunks) response.write(`data: ${JSON.stringify({ id: "review-probe", created: 1, model: "review-model", choices: [{ index: 0, ...chunk }] })}\n\n`);
+      response.end("data: [DONE]\n\n");
+      return;
+    }
     response.writeHead(401, { "Content-Type": "application/json" });
     response.end(
       JSON.stringify({
@@ -379,6 +391,10 @@ it("preserves actual provider HTTP errors from the streaming SDK without exposin
       reasoning_effort: "low",
       max_tokens: 8192,
     });
+    rejectProvider = false;
+    const successful = await reviewToolAction({ ...input, settings, prepare: async () => ({ payload: "Review shallow cloning a public source repository without installing or running it." }) });
+    expect(successful).toEqual({ decision: "allow", reason: "Shallow source clone only; no code execution" });
+    expect(requests).toHaveLength(2);
   } finally {
     await new Promise<void>((resolve) => server.close(() => resolve()));
   }

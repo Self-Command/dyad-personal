@@ -11,6 +11,8 @@
 5. TypeScript 项目可使用本地 `explore_code` 编译器代码图；项目必须安装 TypeScript 并具备可发现的 tsconfig。普通读文件、grep、Git、类型检查、测试、构建、预览及 MCP 沿用原有实现。
 6. MCP 可连接自建网页检索、爬虫、图像等服务，密钥通过服务配置提供。MCP 安全分类也使用当前模型，分类失败仍回退到人工确认。
 
+从 `personal.2` 起，可在 Settings → Model Providers → **Safety review model / 安全审查模型** 单独配置审查模型、推理强度和 Shell 审查超时，保存后点击 **测试已保存的审查连接**。测试会调用模型而不执行 Shell 命令。详见 [审查故障原因与修复](SAFETY-REVIEW-FIX.md)。
+
 Personal mode 下不暴露官方付费 Engine 工具。需要官方服务时可关闭 Personal mode 并配置真实官方凭据；不会代填 key、伪造订阅或修改官方配额。已存在的官方订阅设置不会被改写。暂未迁移的功能见 [PRO-AUDIT.md](PRO-AUDIT.md)。
 
 应用名 `Dyad Personal`，可执行文件 `dyad-personal`，macOS bundle ID `dev.selfcommand.dyad-personal`。使用独立的 Electron 用户数据目录，默认项目目录为 `~/dyad-personal-apps`。不自动复制官方配置或已有项目。官方自动更新入口被禁用，更新从个人 Releases 手动安装。
