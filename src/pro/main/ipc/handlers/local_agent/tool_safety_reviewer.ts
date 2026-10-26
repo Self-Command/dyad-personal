@@ -78,6 +78,7 @@ export async function reviewToolAction<D extends "ask" | "block">({
         : { name: "gpt-6-luna", provider: "openai" };
       const auxiliary = getAuxiliarySettings(settings);
       const { modelClient, runtimeModel } = await getModelClient(reviewModel, auxiliary);
+      const personalOptions = personal ? await (async () => {
       const selection = modelClient.getRuntimeModel?.() ?? await resolveModelSelection({
         model: runtimeModel ?? reviewModel,
         preferredEffortLevel: personal && settings.personalSafetyReviewModel
@@ -87,12 +88,7 @@ export async function reviewToolAction<D extends "ask" | "block">({
       const [maxOutputTokens, temperature] = await Promise.all([
         getMaxTokens(selection), getTemperature(selection),
       ]);
-      controller.signal.throwIfAborted();
-      state.phase = "generation";
-      const stream = streamText({
-        output: fastTextOutput(),
-        model: modelClient.model,
-        ...(personal ? {
+      return {
           providerOptions: getProviderOptions({
             dyadAppId: 0, files: [], mentionedAppsCodebases: [], dyadDisableFiles: true,
             builtinProviderId: modelClient.builtinProviderId,
@@ -102,7 +98,14 @@ export async function reviewToolAction<D extends "ask" | "block">({
           headers: getAiHeaders({ builtinProviderId: modelClient.builtinProviderId }),
           maxOutputTokens,
           temperature,
-        } : {}),
+      };
+      })() : {};
+      controller.signal.throwIfAborted();
+      state.phase = "generation";
+      const stream = streamText({
+        output: fastTextOutput(),
+        model: modelClient.model,
+        ...personalOptions,
         system,
         maxRetries: 1,
         abortSignal: controller.signal,

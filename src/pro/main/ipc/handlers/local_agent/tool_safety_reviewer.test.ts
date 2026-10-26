@@ -1,3 +1,4 @@
+// @vitest-environment node
 import type { UserSettings } from "@/lib/schemas";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 const mocks = vi.hoisted(() => ({

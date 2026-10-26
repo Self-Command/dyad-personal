@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { userInputContracts, userInputEvents } from "../types/user_input";
+import { settingsContracts } from "../types/settings";
 import { supabaseEvents } from "../types/supabase";
 import { gitEvents } from "../types/github";
 import { testsContracts, testsEvents } from "../types/tests";
@@ -19,6 +20,9 @@ import {
 } from "./channels";
 
 describe("user-input preload channels", () => {
+  it("allows the typed Personal reviewer connectivity probe", () => {
+    expect(VALID_INVOKE_CHANNELS).toContain(settingsContracts.testPersonalSafetyReview.channel);
+  });
   it("allows every user-input invoke and receive contract", () => {
     for (const contract of Object.values(userInputContracts)) {
       expect(VALID_INVOKE_CHANNELS).toContain(contract.channel);

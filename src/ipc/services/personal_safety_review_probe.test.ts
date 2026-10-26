@@ -3,7 +3,7 @@ import type { UserSettings } from "@/lib/schemas";
 const mocks = vi.hoisted(() => ({ review: vi.fn() }));
 vi.mock("@/pro/main/ipc/handlers/local_agent/tool_safety_reviewer", () => ({ reviewToolAction: mocks.review }));
 import { probePersonalSafetyReview } from "./personal_safety_review_probe";
-beforeEach(() => mocks.review.mockReset());
+beforeEach(() => { mocks.review.mockReset(); });
 it("tests the configured production reviewer with only an inert inspection tool", async () => {
   mocks.review.mockImplementation(async ({ prepare, timeoutMs }) => {
     expect(timeoutMs).toBe(90_000);

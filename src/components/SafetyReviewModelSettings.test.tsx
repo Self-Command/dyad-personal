@@ -6,6 +6,7 @@ import { SafetyReviewModelSettings } from "./SafetyReviewModelSettings";
 
 const mocks = vi.hoisted(() => ({
   update: vi.fn(async () => {}),
+  probe: vi.fn(async () => ({ available: true, reason: "连接正常，未执行命令" })),
   settings: {
     enablePersonalMode: true,
     selectedModel: { provider: "chat-provider", name: "chat-model" },
@@ -16,11 +17,18 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@/hooks/useSettings", () => ({ useSettings: () => ({ settings: mocks.settings, updateSettings: mocks.update }) }));
 vi.mock("@tanstack/react-query", () => ({ useQuery: () => ({ data: [{ id: "review-provider", name: "My review API" }, { id: "auto", name: "Official Engine" }] }) }));
 vi.mock("@/hooks/useLanguageModelsByProviders", () => ({ useLanguageModelsByProviders: () => ({ data: { "review-provider": [{ apiName: "review-model", displayName: "Review model", type: "custom", id: 7 }] } }) }));
+vi.mock("@/ipc/types", async (original) => ({ ...await original<typeof import("@/ipc/types")>(), ipc: { settings: { testPersonalSafetyReview: mocks.probe } } }));
 
 beforeEach(() => { mocks.update.mockClear(); mocks.settings.enablePersonalMode = true; });
 afterEach(cleanup);
 
 describe("Personal review configuration", () => {
+  it("lets the user test the saved review configuration without submitting a shell command", async () => {
+    render(<SafetyReviewModelSettings />);
+    await userEvent.click(screen.getByRole("button", { name: "测试已保存的审查连接" }));
+    expect(mocks.probe).toHaveBeenCalled();
+    expect(await screen.findByRole("status")).toHaveTextContent("未执行命令");
+  });
   it("saves an independent model, effort and timeout without changing the chat model", async () => {
     render(<SafetyReviewModelSettings />);
     fireEvent.change(screen.getByLabelText("审查模型 ID"), { target: { value: "another-review-model" } });

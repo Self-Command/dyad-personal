@@ -66,6 +66,7 @@ jobs:
           src/shared/shell_capability.test.ts
           src/lib/settingsSearchIndex.test.ts
           src/lib/subscriptionModels.test.ts
+          src/ipc/preload/channels.test.ts
           src/hooks/useLanguageModelProviders.test.ts
           src/components/ShellExperimentSwitch.test.tsx
           src/components/SafetyReviewModelSettings.test.tsx
