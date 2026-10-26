@@ -3,6 +3,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { useTheme } from "../contexts/ThemeContext";
 import { ProviderSettingsGrid } from "@/components/ProviderSettings";
 import { PersonalModeSwitch } from "@/components/PersonalModeSwitch";
+import { SafetyReviewModelSettings } from "@/components/SafetyReviewModelSettings";
 import ConfirmationDialog from "@/components/ConfirmationDialog";
 import { ipc } from "@/ipc/types";
 import { showSuccess, showError } from "@/lib/toast";
@@ -152,6 +153,7 @@ export default function SettingsPage() {
             <div id={SETTING_IDS.personalMode} className="mt-4">
               <PersonalModeSwitch />
             </div>
+            <div id={SETTING_IDS.safetyReviewModel}><SafetyReviewModelSettings /></div>
           </SettingsSection>
 
           <SettingsSection

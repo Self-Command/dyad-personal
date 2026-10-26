@@ -68,12 +68,16 @@ jobs:
           src/lib/subscriptionModels.test.ts
           src/hooks/useLanguageModelProviders.test.ts
           src/components/ShellExperimentSwitch.test.tsx
+          src/components/SafetyReviewModelSettings.test.tsx
           src/components/SetupBanner.test.tsx
           src/main/settings.test.ts
           src/ipc/utils/get_model_client.test.ts
           src/ipc/services/subscription_turn_preflight.test.ts
           src/ipc/services/app_runtime_service.test.ts
+          src/ipc/services/personal_safety_review_probe.test.ts
           src/pro/main/ipc/handlers/local_agent/tool_safety_reviewer.test.ts
+          src/pro/main/ipc/handlers/local_agent/safety_review_error.test.ts
+          src/pro/main/ipc/handlers/local_agent/shell_review.configuration.test.ts
           src/pro/main/ipc/handlers/local_agent/shell_review.test.ts
           src/pro/main/ipc/handlers/local_agent/tools/run_shell.spec.ts
           src/pro/main/ipc/handlers/local_agent/tools/shell_process.test.ts

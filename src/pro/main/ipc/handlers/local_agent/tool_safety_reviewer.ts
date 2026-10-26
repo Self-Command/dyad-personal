@@ -6,6 +6,11 @@ import { fastTextOutput } from "@/ipc/utils/stream_text_utils";
 import { extractJson } from "@/ipc/utils/extract_json";
 import { isPersonalMode, type UserSettings } from "@/lib/schemas";
 import { getAuxiliarySettings } from "@/lib/auxiliaryModel";
+import { getProviderOptions, getAiHeaders } from "@/ipc/utils/provider_options";
+import { getMaxTokens, getTemperature } from "@/ipc/utils/token_utils";
+import { resolveModelSelection } from "@/ipc/utils/model_effort";
+import { getModelPreferenceKey } from "@/lib/modelEffort";
+import { describeSafetyReviewFailure } from "./safety_review_error";
 
 export const TOOL_REVIEW_TIMEOUT_MS = 8_000;
 // Shell inspection can require several model round trips; MCP remains a single verdict.
@@ -46,6 +51,7 @@ export async function reviewToolAction<D extends "ask" | "block">({
   const state: { phase: "context" | "model setup" | "generation" | "verdict" } =
     { phase: "context" };
   let timedOut = false;
+  let streamError: unknown;
   const controller = new AbortController();
   const abort = () => controller.abort();
   signal?.addEventListener("abort", abort, { once: true });
@@ -66,21 +72,44 @@ export async function reviewToolAction<D extends "ask" | "block">({
       const { payload, tools } = await prepare(controller.signal);
       controller.signal.throwIfAborted();
       state.phase = "model setup";
-      const { modelClient } = await getModelClient(
-        isPersonalMode(settings)
-          ? settings.selectedModel
-          : { name: "gpt-6-luna", provider: "openai" },
-        getAuxiliarySettings(settings),
-      );
+      const personal = isPersonalMode(settings);
+      const reviewModel = personal
+        ? settings.personalSafetyReviewModel ?? settings.selectedModel
+        : { name: "gpt-6-luna", provider: "openai" };
+      const auxiliary = getAuxiliarySettings(settings);
+      const { modelClient, runtimeModel } = await getModelClient(reviewModel, auxiliary);
+      const selection = modelClient.getRuntimeModel?.() ?? await resolveModelSelection({
+        model: runtimeModel ?? reviewModel,
+        preferredEffortLevel: personal && settings.personalSafetyReviewModel
+          ? settings.personalSafetyReviewModel.effortLevel
+          : settings.modelEffortPreferences?.[getModelPreferenceKey(reviewModel)],
+      });
+      const [maxOutputTokens, temperature] = await Promise.all([
+        getMaxTokens(selection), getTemperature(selection),
+      ]);
       controller.signal.throwIfAborted();
       state.phase = "generation";
       const stream = streamText({
         output: fastTextOutput(),
         model: modelClient.model,
+        ...(personal ? {
+          providerOptions: getProviderOptions({
+            dyadAppId: 0, files: [], mentionedAppsCodebases: [], dyadDisableFiles: true,
+            builtinProviderId: modelClient.builtinProviderId,
+            reasoningEffortProviderId: modelClient.reasoningEffortProviderId,
+            modelSelection: selection,
+          }),
+          headers: getAiHeaders({ builtinProviderId: modelClient.builtinProviderId }),
+          maxOutputTokens,
+          temperature,
+        } : {}),
         system,
         maxRetries: 1,
         abortSignal: controller.signal,
         messages: [{ role: "user", content: payload }],
+        // stream.text can reject with a generic NoOutputGeneratedError. Preserve
+        // the original provider failure without logging raw request/response data.
+        onError: ({ error }) => { streamError ??= error; },
         ...(tools
           ? {
               tools,
@@ -94,6 +123,7 @@ export async function reviewToolAction<D extends "ask" | "block">({
           : {}),
       });
       const text = await stream.text;
+      if (streamError) throw streamError;
       controller.signal.throwIfAborted();
       state.phase = "verdict";
       const json = extractJson(text);
@@ -129,7 +159,7 @@ export async function reviewToolAction<D extends "ask" | "block">({
           ? error.message
           : state.phase === "verdict"
             ? "The safety reviewer returned an invalid verdict."
-            : `Tool safety review failed during ${state.phase}.`;
+            : `Tool safety review failed during ${state.phase}. ${describeSafetyReviewFailure(streamError ?? error)}${isPersonalMode(settings) ? " Review model: " + (settings.personalSafetyReviewModel ?? settings.selectedModel).provider + "/" + (settings.personalSafetyReviewModel ?? settings.selectedModel).name + ". Configure Settings → Model Providers → Safety review model." : ""}`;
     // Fixed metadata avoids logging payloads or provider errors containing secrets.
     logger.warn(reason, {
       phase: state.phase,

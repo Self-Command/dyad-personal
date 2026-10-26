@@ -206,11 +206,22 @@ export async function reviewShellCommand(
   ctx: AgentContext,
 ) {
   const evidence: InspectionEvidence = new Map();
+  const current = readSettings();
+  const accepted = ctx.inferenceSettings ?? current;
+  // Retry must see an updated reviewer/key, while keeping the accepted chat model.
+  const reviewSettings = accepted.enablePersonalMode ? {
+    ...accepted,
+    providerSettings: current.providerSettings,
+    personalSafetyReviewModel: current.personalSafetyReviewModel,
+    personalSafetyReviewTimeoutSeconds: current.personalSafetyReviewTimeoutSeconds,
+  } : accepted;
   const result = await reviewToolAction({
-    settings: ctx.inferenceSettings ?? readSettings(),
+    settings: reviewSettings,
     system: buildShellReviewPrompt(),
     fallback: "block",
-    timeoutMs: SHELL_REVIEW_TIMEOUT_MS,
+    timeoutMs: reviewSettings.enablePersonalMode
+      ? (reviewSettings.personalSafetyReviewTimeoutSeconds ?? 45) * 1000
+      : SHELL_REVIEW_TIMEOUT_MS,
     signal: ctx.abortSignal,
     prepare: async (signal) => {
       const recentTurns = await getRecentTurnsForConsent(ctx.chatId);

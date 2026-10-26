@@ -551,6 +551,8 @@ const BaseUserSettingsFields = {
   chatgptFastMode: z.boolean().optional(),
   enableDyadPro: z.boolean().optional(),
   enablePersonalMode: z.boolean().optional(),
+  personalSafetyReviewModel: ModelSelectionSchema.nullable().optional(),
+  personalSafetyReviewTimeoutSeconds: z.number().int().min(15).max(120).optional(),
   experiments: ExperimentsSchema.optional(),
   lastShownReleaseNotesVersion: z.string().optional(),
   maxChatTurnsInContext: z.number().optional(),

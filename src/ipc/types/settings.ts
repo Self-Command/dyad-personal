@@ -17,6 +17,11 @@ export const ProviderApiKeyValidationProviderSchema = z.enum([
  * These are the simplest endpoints - no complex input, just get/set operations.
  */
 export const settingsContracts = {
+  testPersonalSafetyReview: defineContract({
+    channel: "personal-safety-review:test",
+    input: z.void(),
+    output: z.object({ available: z.boolean(), reason: z.string() }),
+  }),
   getCodexSubscriptionStatus: defineContract({
     channel: "codex-subscription:status",
     input: z.void(),

@@ -10,6 +10,10 @@ import {
 } from "../services/codex_subscription_auth";
 
 export function registerSettingsHandlers() {
+  createTypedHandler(settingsContracts.testPersonalSafetyReview, async () => {
+    const { probePersonalSafetyReview } = await import("../services/personal_safety_review_probe");
+    return probePersonalSafetyReview(await readEffectiveSettings());
+  });
   createTypedHandler(
     settingsContracts.acknowledgeSubscriptionConnection,
     async () => acknowledgeSubscriptionConnection(),

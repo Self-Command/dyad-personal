@@ -13,6 +13,7 @@ export const SECTION_IDS = {
 
 export const SETTING_IDS = {
   personalMode: "setting-personal-mode",
+  safetyReviewModel: "setting-safety-review-model",
   theme: "setting-theme",
   zoom: "setting-zoom",
   autoUpdate: "setting-auto-update",
@@ -74,6 +75,14 @@ type SearchableSettingItem = {
 };
 
 export const SETTINGS_SEARCH_INDEX: SearchableSettingItem[] = [
+  {
+    id: SETTING_IDS.safetyReviewModel,
+    label: "Safety review model / 安全审查模型",
+    description: "Choose an independent Personal review provider, model, effort and Shell review timeout",
+    keywords: ["shell", "review", "审查", "安全", "模型", "timeout"],
+    sectionId: SECTION_IDS.providers,
+    sectionLabel: "Model Providers",
+  },
   {
     id: SETTING_IDS.personalMode,
     label: "Personal mode",
