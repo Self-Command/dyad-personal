@@ -11,7 +11,8 @@ import {
 
 export function registerSettingsHandlers() {
   createTypedHandler(settingsContracts.testPersonalSafetyReview, async () => {
-    const { probePersonalSafetyReview } = await import("../services/personal_safety_review_probe");
+    const { probePersonalSafetyReview } =
+      await import("../services/personal_safety_review_probe");
     return probePersonalSafetyReview(await readEffectiveSettings());
   });
   createTypedHandler(

@@ -7,9 +7,18 @@ const mocks = vi.hoisted(() => ({
   getMaxTokens: vi.fn(async () => 8192),
   getTemperature: vi.fn(async () => 0.2),
 }));
-vi.mock("@/ipc/utils/token_utils", () => ({ getMaxTokens: mocks.getMaxTokens, getTemperature: mocks.getTemperature }));
+vi.mock("@/ipc/utils/token_utils", () => ({
+  getMaxTokens: mocks.getMaxTokens,
+  getTemperature: mocks.getTemperature,
+}));
 vi.mock("@/ipc/utils/model_effort", () => ({
-  resolveModelSelection: async ({ model, preferredEffortLevel }: { model: object; preferredEffortLevel?: string }) => ({ ...model, effortLevel: preferredEffortLevel ?? "medium" }),
+  resolveModelSelection: async ({
+    model,
+    preferredEffortLevel,
+  }: {
+    model: object;
+    preferredEffortLevel?: string;
+  }) => ({ ...model, effortLevel: preferredEffortLevel ?? "medium" }),
 }));
 vi.mock("ai", async (original) => ({
   ...(await original<typeof import("ai")>()),
@@ -34,16 +43,42 @@ beforeEach(() => {
 });
 describe("mandatory tool reviewer", () => {
   it("uses an independently configured reviewer and forwards its provider settings", async () => {
-    const reviewer = { provider: "review-endpoint", name: "review-model", effortLevel: "low" };
-    const settings = { enablePersonalMode: true, selectedModel: { provider: "chat-endpoint", name: "chat-model" }, personalSafetyReviewModel: reviewer } as UserSettings;
-    mocks.getModelClient.mockResolvedValue({ modelClient: { model: {}, builtinProviderId: "review-endpoint", reasoningEffortProviderId: "review-endpoint" } });
-    mocks.streamText.mockReturnValue({ text: Promise.resolve('{"decision":"allow","reason":"Bounded task"}') });
-    expect((await reviewToolAction({ ...input, settings })).decision).toBe("allow");
-    expect(mocks.getModelClient).toHaveBeenCalledWith(reviewer, expect.objectContaining({ proModelUsage: "api-key" }));
-    expect(mocks.streamText).toHaveBeenCalledWith(expect.objectContaining({
-      providerOptions: expect.objectContaining({ "review-endpoint": { reasoningEffort: "low" } }),
-      maxOutputTokens: 8192, temperature: 0.2,
-    }));
+    const reviewer = {
+      provider: "review-endpoint",
+      name: "review-model",
+      effortLevel: "low",
+    };
+    const settings = {
+      enablePersonalMode: true,
+      selectedModel: { provider: "chat-endpoint", name: "chat-model" },
+      personalSafetyReviewModel: reviewer,
+    } as UserSettings;
+    mocks.getModelClient.mockResolvedValue({
+      modelClient: {
+        model: {},
+        builtinProviderId: "review-endpoint",
+        reasoningEffortProviderId: "review-endpoint",
+      },
+    });
+    mocks.streamText.mockReturnValue({
+      text: Promise.resolve('{"decision":"allow","reason":"Bounded task"}'),
+    });
+    expect((await reviewToolAction({ ...input, settings })).decision).toBe(
+      "allow",
+    );
+    expect(mocks.getModelClient).toHaveBeenCalledWith(
+      reviewer,
+      expect.objectContaining({ proModelUsage: "api-key" }),
+    );
+    expect(mocks.streamText).toHaveBeenCalledWith(
+      expect.objectContaining({
+        providerOptions: expect.objectContaining({
+          "review-endpoint": { reasoningEffort: "low" },
+        }),
+        maxOutputTokens: 8192,
+        temperature: 0.2,
+      }),
+    );
     expect(settings.selectedModel.name).toBe("chat-model");
   });
   it("reviews personal commands with the selected user model and direct API settings", async () => {
@@ -297,22 +332,53 @@ it("preserves actual provider HTTP errors from the streaming SDK without exposin
     for await (const chunk of request) chunks.push(Buffer.from(chunk));
     requests.push(JSON.parse(Buffer.concat(chunks).toString()));
     response.writeHead(401, { "Content-Type": "application/json" });
-    response.end(JSON.stringify({ error: { message: "Bearer SECRET_KEY sensitive-provider-body", type: "invalid_api_key", code: "invalid_api_key" } }));
+    response.end(
+      JSON.stringify({
+        error: {
+          message: "Bearer SECRET_KEY sensitive-provider-body",
+          type: "invalid_api_key",
+          code: "invalid_api_key",
+        },
+      }),
+    );
   });
   server.listen(0, "127.0.0.1");
   await once(server, "listening");
   const address = server.address();
-  if (!address || typeof address === "string") throw new Error("Missing local fake API");
+  if (!address || typeof address === "string")
+    throw new Error("Missing local fake API");
   try {
-    const provider = createOpenAICompatible({ name: "review-test", baseURL: `http://127.0.0.1:${address.port}/v1`, apiKey: "SECRET_KEY" });
-    mocks.getModelClient.mockResolvedValue({ modelClient: { model: provider("review-model"), builtinProviderId: "review-test", reasoningEffortProviderId: "review-test" } });
-    const settings = { enablePersonalMode: true, selectedModel: { provider: "chat", name: "chat-model" }, personalSafetyReviewModel: { provider: "review-test", name: "review-model", effortLevel: "low" } } as UserSettings;
+    const provider = createOpenAICompatible({
+      name: "review-test",
+      baseURL: `http://127.0.0.1:${address.port}/v1`,
+      apiKey: "SECRET_KEY",
+    });
+    mocks.getModelClient.mockResolvedValue({
+      modelClient: {
+        model: provider("review-model"),
+        builtinProviderId: "review-test",
+        reasoningEffortProviderId: "review-test",
+      },
+    });
+    const settings = {
+      enablePersonalMode: true,
+      selectedModel: { provider: "chat", name: "chat-model" },
+      personalSafetyReviewModel: {
+        provider: "review-test",
+        name: "review-model",
+        effortLevel: "low",
+      },
+    } as UserSettings;
     const result = await reviewToolAction({ ...input, settings });
     expect(result).toMatchObject({ decision: "block", unavailable: true });
     expect(result.reason).toContain("HTTP 401");
     expect(result.reason).not.toMatch(/SECRET_KEY|sensitive-provider-body/);
     expect(requests).toHaveLength(1);
-    expect(requests[0]).toMatchObject({ model: "review-model", reasoning_effort: "low", max_tokens: 8192 });
+    expect(requests[0]).toMatchObject({
+      model: "review-model",
+      reasoning_effort: "low",
+      max_tokens: 8192,
+    });
   } finally {
     await new Promise<void>((resolve) => server.close(() => resolve()));
   }

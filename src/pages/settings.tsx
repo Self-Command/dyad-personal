@@ -153,7 +153,9 @@ export default function SettingsPage() {
             <div id={SETTING_IDS.personalMode} className="mt-4">
               <PersonalModeSwitch />
             </div>
-            <div id={SETTING_IDS.safetyReviewModel}><SafetyReviewModelSettings /></div>
+            <div id={SETTING_IDS.safetyReviewModel}>
+              <SafetyReviewModelSettings />
+            </div>
           </SettingsSection>
 
           <SettingsSection

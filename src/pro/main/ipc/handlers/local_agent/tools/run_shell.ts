@@ -106,7 +106,11 @@ export const runShellTool: ToolDefinition<z.infer<typeof schema>> = {
     }
     // An outage has no safety verdict. Retry requires fresh review, never execution approval.
     let reviewRetries = 0;
-    while (decision.unavailable && !ctx.abortSignal?.aborted && reviewRetries < 1) {
+    while (
+      decision.unavailable &&
+      !ctx.abortSignal?.aborted &&
+      reviewRetries < 1
+    ) {
       present("review unavailable", decision.reason);
       const retry = await ctx.requireConsent({
         toolName: "run_shell",
@@ -138,7 +142,11 @@ export const runShellTool: ToolDefinition<z.infer<typeof schema>> = {
     if (decision.unavailable && !ctx.abortSignal?.aborted) {
       const reason = `${decision.reason} Review failed twice; the command was not executed. Configure the review model, then submit the task again. Do not retry the same command automatically.`;
       present("review unavailable", reason, true);
-      return JSON.stringify({ status: "review_unavailable", reason, retryable: false });
+      return JSON.stringify({
+        status: "review_unavailable",
+        reason,
+        retryable: false,
+      });
     }
     if (ctx.abortSignal?.aborted) {
       present("cancelled", "Cancelled before execution.", true);

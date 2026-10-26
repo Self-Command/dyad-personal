@@ -354,12 +354,26 @@ it("never executes when an unavailable review retry is declined", async () => {
   await expect(readFile(path.join(directory, "result.txt"))).rejects.toThrow();
 });
 it("terminates after one failed manual retry and never asks to run an unreviewed command", async () => {
-  mocks.review.mockResolvedValue({ decision: "block", reason: "Review provider returned HTTP 401", unavailable: true });
-  const result = JSON.parse(await runShellTool.execute({ command: writeCommand, description: "test" }, ctx));
+  mocks.review.mockResolvedValue({
+    decision: "block",
+    reason: "Review provider returned HTTP 401",
+    unavailable: true,
+  });
+  const result = JSON.parse(
+    await runShellTool.execute(
+      { command: writeCommand, description: "test" },
+      ctx,
+    ),
+  );
   expect(mocks.review).toHaveBeenCalledTimes(2);
   expect(ctx.requireConsent).toHaveBeenCalledTimes(1);
-  expect(ctx.requireConsent).toHaveBeenCalledWith(expect.objectContaining({ confirmation: "shell-review-retry" }));
-  expect(result).toMatchObject({ status: "review_unavailable", retryable: false });
+  expect(ctx.requireConsent).toHaveBeenCalledWith(
+    expect.objectContaining({ confirmation: "shell-review-retry" }),
+  );
+  expect(result).toMatchObject({
+    status: "review_unavailable",
+    retryable: false,
+  });
   expect(result.reason).toContain("command was not executed");
   expect(mocks.track).not.toHaveBeenCalled();
   await expect(readFile(path.join(directory, "result.txt"))).rejects.toThrow();

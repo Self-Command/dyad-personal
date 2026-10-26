@@ -209,12 +209,15 @@ export async function reviewShellCommand(
   const current = readSettings();
   const accepted = ctx.inferenceSettings ?? current;
   // Retry must see an updated reviewer/key, while keeping the accepted chat model.
-  const reviewSettings = accepted.enablePersonalMode ? {
-    ...accepted,
-    providerSettings: current.providerSettings,
-    personalSafetyReviewModel: current.personalSafetyReviewModel,
-    personalSafetyReviewTimeoutSeconds: current.personalSafetyReviewTimeoutSeconds,
-  } : accepted;
+  const reviewSettings = accepted.enablePersonalMode
+    ? {
+        ...accepted,
+        providerSettings: current.providerSettings,
+        personalSafetyReviewModel: current.personalSafetyReviewModel,
+        personalSafetyReviewTimeoutSeconds:
+          current.personalSafetyReviewTimeoutSeconds,
+      }
+    : accepted;
   const result = await reviewToolAction({
     settings: reviewSettings,
     system: buildShellReviewPrompt(),
