@@ -32,7 +32,9 @@ describe("safe review provider diagnostics", () => {
     expect(describeSafetyReviewFailure(error)).toContain("HTTP 429");
   });
   it("classifies streamed API error objects without exposing their messages", () => {
-    const result = describeSafetyReviewFailure({ error: { code: "insufficient_quota", message: "secret-account-body" } });
+    const result = describeSafetyReviewFailure({
+      error: { code: "insufficient_quota", message: "secret-account-body" },
+    });
     expect(result).toContain("insufficient quota");
     expect(result).not.toContain("secret-account-body");
   });

@@ -19,8 +19,14 @@ export function describeSafetyReviewFailure(error: unknown): string {
     };
     const status = record.statusCode;
     const code = typeof record.code === "string" ? record.code : "";
-    if (/^(?:invalid_api_key|authentication_error|permission_denied)$/.test(code)) return "The review provider reported an authentication or permission error. Check its API key and model access.";
-    if (/^(?:rate_limit_exceeded|rate_limit_error|insufficient_quota)$/.test(code)) return "The review provider reported a rate limit or insufficient quota. Check its account and retry later.";
+    if (
+      /^(?:invalid_api_key|authentication_error|permission_denied)$/.test(code)
+    )
+      return "The review provider reported an authentication or permission error. Check its API key and model access.";
+    if (
+      /^(?:rate_limit_exceeded|rate_limit_error|insufficient_quota)$/.test(code)
+    )
+      return "The review provider reported a rate limit or insufficient quota. Check its account and retry later.";
     if (
       typeof status === "number" &&
       Number.isInteger(status) &&

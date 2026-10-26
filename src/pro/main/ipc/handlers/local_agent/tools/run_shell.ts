@@ -79,7 +79,12 @@ export const runShellTool: ToolDefinition<z.infer<typeof schema>> = {
     if (!ctx.shellReviewContext)
       return blocked("Shell execution is unavailable in this turn.");
     if (ctx.shellReviewContext.unavailableForTurn) {
-      return JSON.stringify({ status: "review_unavailable", reason: "Shell review already failed in this turn. Configure the review model and submit a new task; the command was not executed.", retryable: false });
+      return JSON.stringify({
+        status: "review_unavailable",
+        reason:
+          "Shell review already failed in this turn. Configure the review model and submit a new task; the command was not executed.",
+        retryable: false,
+      });
     }
     const available = () => {
       const settings = readSettings();
@@ -135,7 +140,7 @@ export const runShellTool: ToolDefinition<z.infer<typeof schema>> = {
         return JSON.stringify({
           status: "review_unavailable",
           reason: decision.reason,
-          retryable: true,
+          retryable: false,
         });
       }
       if (!available())

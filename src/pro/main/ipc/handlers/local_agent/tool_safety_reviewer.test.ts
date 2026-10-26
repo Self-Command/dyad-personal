@@ -53,13 +53,16 @@ describe("mandatory tool reviewer", () => {
       selectedModel: { provider: "chat-endpoint", name: "chat-model" },
       personalSafetyReviewModel: reviewer,
     } as UserSettings;
-    mocks.getModelClient.mockResolvedValue({
-      modelClient: {
-        model: {},
-        builtinProviderId: "review-endpoint",
-        reasoningEffortProviderId: "review-endpoint",
-      },
-    });
+    mocks.getModelClient.mockImplementation(
+      async (_model, _settings, selection) => ({
+        modelClient: {
+          model: {},
+          builtinProviderId: "review-endpoint",
+          reasoningEffortProviderId: "review-endpoint",
+          getRuntimeModel: () => selection,
+        },
+      }),
+    );
     mocks.streamText.mockReturnValue({
       text: Promise.resolve('{"decision":"allow","reason":"Bounded task"}'),
     });
@@ -69,6 +72,7 @@ describe("mandatory tool reviewer", () => {
     expect(mocks.getModelClient).toHaveBeenCalledWith(
       reviewer,
       expect.objectContaining({ proModelUsage: "api-key" }),
+      expect.objectContaining({ effortLevel: "low" }),
     );
     expect(mocks.streamText).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -336,10 +340,19 @@ it("preserves actual provider HTTP errors from the streaming SDK without exposin
       response.writeHead(200, { "Content-Type": "text/event-stream" });
       const chunks = [
         { delta: { role: "assistant", content: "" }, finish_reason: null },
-        { delta: { content: '{"decision":"allow","reason":"Shallow source clone only; no code execution"}' }, finish_reason: null },
+        {
+          delta: {
+            content:
+              '{"decision":"allow","reason":"Shallow source clone only; no code execution"}',
+          },
+          finish_reason: null,
+        },
         { delta: {}, finish_reason: "stop" },
       ];
-      for (const chunk of chunks) response.write(`data: ${JSON.stringify({ id: "review-probe", created: 1, model: "review-model", choices: [{ index: 0, ...chunk }] })}\n\n`);
+      for (const chunk of chunks)
+        response.write(
+          `data: ${JSON.stringify({ id: "review-probe", created: 1, model: "review-model", choices: [{ index: 0, ...chunk }] })}\n\n`,
+        );
       response.end("data: [DONE]\n\n");
       return;
     }
@@ -392,8 +405,18 @@ it("preserves actual provider HTTP errors from the streaming SDK without exposin
       max_tokens: 8192,
     });
     rejectProvider = false;
-    const successful = await reviewToolAction({ ...input, settings, prepare: async () => ({ payload: "Review shallow cloning a public source repository without installing or running it." }) });
-    expect(successful).toEqual({ decision: "allow", reason: "Shallow source clone only; no code execution" });
+    const successful = await reviewToolAction({
+      ...input,
+      settings,
+      prepare: async () => ({
+        payload:
+          "Review shallow cloning a public source repository without installing or running it.",
+      }),
+    });
+    expect(successful).toEqual({
+      decision: "allow",
+      reason: "Shallow source clone only; no code execution",
+    });
     expect(requests).toHaveLength(2);
   } finally {
     await new Promise<void>((resolve) => server.close(() => resolve()));

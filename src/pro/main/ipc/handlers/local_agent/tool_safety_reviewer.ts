@@ -77,10 +77,17 @@ export async function reviewToolAction<D extends "ask" | "block">({
         ? (settings.personalSafetyReviewModel ?? settings.selectedModel)
         : { name: "gpt-6-luna", provider: "openai" };
       const auxiliary = getAuxiliarySettings(settings);
-      const { modelClient, runtimeModel } = await getModelClient(
-        reviewModel,
-        auxiliary,
-      );
+      const reviewSelection =
+        personal && settings.personalSafetyReviewModel
+          ? await resolveModelSelection({
+              model: reviewModel,
+              preferredEffortLevel:
+                settings.personalSafetyReviewModel.effortLevel,
+            })
+          : undefined;
+      const { modelClient, runtimeModel } = reviewSelection
+        ? await getModelClient(reviewModel, auxiliary, reviewSelection)
+        : await getModelClient(reviewModel, auxiliary);
       const personalOptions = personal
         ? await (async () => {
             const selection =
