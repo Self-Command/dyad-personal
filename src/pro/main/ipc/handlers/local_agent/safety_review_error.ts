@@ -14,8 +14,13 @@ export function describeSafetyReviewFailure(error: unknown): string {
       errors?: unknown;
       name?: unknown;
       message?: unknown;
+      code?: unknown;
+      error?: unknown;
     };
     const status = record.statusCode;
+    const code = typeof record.code === "string" ? record.code : "";
+    if (/^(?:invalid_api_key|authentication_error|permission_denied)$/.test(code)) return "The review provider reported an authentication or permission error. Check its API key and model access.";
+    if (/^(?:rate_limit_exceeded|rate_limit_error|insufficient_quota)$/.test(code)) return "The review provider reported a rate limit or insufficient quota. Check its account and retry later.";
     if (
       typeof status === "number" &&
       Number.isInteger(status) &&
@@ -48,6 +53,7 @@ export function describeSafetyReviewFailure(error: unknown): string {
         String(record.name),
       );
     if (record.cause) queue.push(record.cause);
+    if (record.error) queue.push(record.error);
     if (Array.isArray(record.errors)) queue.push(...record.errors.slice(0, 6));
   }
   if (transport)

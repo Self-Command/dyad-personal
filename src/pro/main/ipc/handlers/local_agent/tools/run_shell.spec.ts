@@ -377,6 +377,10 @@ it("terminates after one failed manual retry and never asks to run an unreviewed
   expect(result.reason).toContain("command was not executed");
   expect(mocks.track).not.toHaveBeenCalled();
   await expect(readFile(path.join(directory, "result.txt"))).rejects.toThrow();
+  expect(runShellTool.isEnabled?.(ctx)).toBe(false);
+  const second = JSON.parse(await runShellTool.execute({ command: writeCommand, description: "model repeats the call" }, ctx));
+  expect(second).toMatchObject({ status: "review_unavailable", retryable: false });
+  expect(mocks.review).toHaveBeenCalledTimes(2);
 });
 it("rechecks capability after one-time approval", async () => {
   mocks.review.mockResolvedValue({

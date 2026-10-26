@@ -74,6 +74,8 @@ export interface AgentContext {
   persistQuestionnaireRecovery?: boolean;
   /** Host-recorded evidence for mandatory shell review, shared across tool calls. */
   shellReviewContext?: {
+    /** Stop repeated model calls after review fails/its retry is declined in this turn. */
+    unavailableForTurn?: boolean;
     tools: { name: string; description: string; available: boolean }[];
     history: {
       tool: string;

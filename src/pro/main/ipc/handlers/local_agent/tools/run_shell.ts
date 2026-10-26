@@ -50,6 +50,7 @@ export const runShellTool: ToolDefinition<z.infer<typeof schema>> = {
   mutationTracking: "internal",
   defaultConsent: "always",
   isEnabled: (ctx) =>
+    !ctx.shellReviewContext?.unavailableForTurn &&
     isShellExperimentAvailable({
       settings: ctx.inferenceSettings ?? readSettings(),
       isDyadPro: ctx.isDyadPro,
@@ -77,6 +78,9 @@ export const runShellTool: ToolDefinition<z.infer<typeof schema>> = {
     };
     if (!ctx.shellReviewContext)
       return blocked("Shell execution is unavailable in this turn.");
+    if (ctx.shellReviewContext.unavailableForTurn) {
+      return JSON.stringify({ status: "review_unavailable", reason: "Shell review already failed in this turn. Configure the review model and submit a new task; the command was not executed.", retryable: false });
+    }
     const available = () => {
       const settings = readSettings();
       const mode = runningApps.get(ctx.appId)?.mode;
@@ -126,6 +130,7 @@ export const runShellTool: ToolDefinition<z.infer<typeof schema>> = {
         return JSON.stringify({ status: "cancelled" });
       }
       if (!retry) {
+        ctx.shellReviewContext.unavailableForTurn = true;
         present("review unavailable", decision.reason, true);
         return JSON.stringify({
           status: "review_unavailable",
@@ -140,6 +145,7 @@ export const runShellTool: ToolDefinition<z.infer<typeof schema>> = {
       decision = await reviewShellCommand(args.command, args.description, ctx);
     }
     if (decision.unavailable && !ctx.abortSignal?.aborted) {
+      ctx.shellReviewContext.unavailableForTurn = true;
       const reason = `${decision.reason} Review failed twice; the command was not executed. Configure the review model, then submit the task again. Do not retry the same command automatically.`;
       present("review unavailable", reason, true);
       return JSON.stringify({
