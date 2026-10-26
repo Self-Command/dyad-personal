@@ -117,7 +117,7 @@ function server(commit) {
   return { state, fetchImpl };
 }
 
-test("publishes all four targets only after upload digest verification; never overwrites a published version", async () => {
+test("publishes Windows only after upload digest verification; never overwrites a published version", async () => {
   const setup = await fixture();
   const fake = server(setup.commit);
   try {
@@ -126,7 +126,8 @@ test("publishes all four targets only after upload digest verification; never ov
       fetchImpl: fake.fetchImpl,
     });
     assert.equal(release.draft, false);
-    assert.equal(fake.state.assets.length, 15);
+    assert.deepEqual(TARGETS, ["win32-x64"]);
+    assert.equal(fake.state.assets.length, 4);
     assert.equal(fake.state.creates, 1);
     assert.equal(fake.state.publishes, 1);
     await assert.rejects(
@@ -161,7 +162,7 @@ test("resumes only matching drafts and rejects tampered local assets or moved ta
     fake.state.moved = false;
     const directory = path.join(setup.root, "out/personal-artifacts");
     await writeFile(
-      path.join(directory, "SHA256SUMS-linux-x64.txt"),
+      path.join(directory, "SHA256SUMS-win32-x64.txt"),
       "tampered",
     );
     await assert.rejects(
@@ -193,10 +194,10 @@ test("a partial upload stays private and a retry reuses matching assets without 
     assert.equal(fake.state.publishes, 0);
     await publishRelease({ ...setup, fetchImpl: fake.fetchImpl });
     assert.equal(fake.state.creates, 1);
-    assert.equal(fake.state.assets.length, 15);
+    assert.equal(fake.state.assets.length, 4);
     assert.equal(
       new Set(fake.state.assets.map((asset) => asset.name)).size,
-      15,
+      4,
     );
     assert.equal(fake.state.publishes, 1);
   } finally {

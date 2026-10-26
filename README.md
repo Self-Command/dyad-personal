@@ -6,7 +6,7 @@ Independent personal distribution based on [Dyad v1.20.0](https://github.com/dya
 
 Use your own model API or a self-hosted provider with the local Agent, reviewed Shell and TypeScript code explorer. No official subscription status is fabricated; official hosted services retain their own authentication and billing.
 
-Windows x64, macOS x64/arm64 and Linux x64 builds run in GitHub Actions. Push a version-matching `vX.Y.Z-personal.N` tag to validate, build, smoke-test and publish installers. Personal builds update manually through this repository's Releases.
+Windows x64 builds run in GitHub Actions. Push a version-matching `vX.Y.Z-personal.N` tag to validate, build and publish the installer and portable ZIP. Personal builds update manually through this repository's Releases.
 
 ## Upstream licenses
 

@@ -11,7 +11,7 @@ import {
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
-export const TARGETS = ["win32-x64", "linux-x64", "darwin-x64", "darwin-arm64"];
+export const TARGETS = ["win32-x64"];
 
 export function validateVersionTag(version, tag) {
   if (!/^\d+\.\d+\.\d+-personal\.\d+$/.test(version) || tag !== `v${version}`) {
@@ -201,7 +201,7 @@ export async function publishRelease({
         name: `Dyad Personal ${version}`,
         draft: true,
         prerelease: true,
-        body: `${marker}\n\nIndependent personal distribution based on dyad-sh/dyad v1.20.0.\n\nWindows x64 (installer and portable ZIP), macOS Intel/Apple Silicon ZIP, Linux x64 (DEB/RPM/AppImage). Builds are unsigned. SHA256 checksums and source manifests accompany each target. Official auto-updates are disabled.\n\nUse Personal mode with your API key or local model. Shell is opt-in, reviewed and requires per-command approval. Official Engine services require their own authorization.\n\nSee docs/PERSONAL.md and docs/PRO-AUDIT.md in the source for setup, limitations and licenses.`,
+        body: `${marker}\n\nIndependent personal distribution based on dyad-sh/dyad v1.20.0.\n\nWindows x64 installer and portable ZIP. Builds are unsigned. SHA256 checksums and a source manifest accompany the installers. Official auto-updates are disabled.\n\nUse Personal mode with your API key or local model. Shell is opt-in, reviewed and requires per-command approval. Official Engine services require their own authorization.\n\nSee docs/PERSONAL.md and docs/PRO-AUDIT.md in the source for setup, limitations and licenses.`,
       }),
     });
   const existing = await api(`/releases/${release.id}/assets?per_page=100`);

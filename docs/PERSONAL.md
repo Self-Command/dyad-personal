@@ -4,7 +4,7 @@
 
 ## 日常使用
 
-1. 从本仓库 Releases 下载对应平台安装包。Windows x64 提供安装 EXE 和便携 ZIP，macOS 提供 Intel x64 / Apple Silicon arm64 ZIP，Linux x64 提供 DEB、RPM、AppImage。
+1. 从本仓库 Releases 下载 Windows x64 安装 EXE 或便携 ZIP。按个人使用要求，后续自动发行仅构建 Windows；旧版已完成的其他平台产物保留。
 2. 打开 Settings → Model Providers，添加自己的 API key，或配置自建 OpenAI-compatible provider、Ollama、LM Studio，然后在模型选择器选择实际模型。使用支持工具调用的模型；图像附件还需要模型支持视觉输入。
 3. Personal mode 默认开启，模型直接请求上述 provider。该模式的本地 Agent 不使用 Basic Agent 的本地试用计数，也不发送 Engine 计费请求；模型供应商自己的鉴权、付费和限流照常适用。
 4. Settings → Experiments 中可启用 Shell（默认关闭）。每条命令先由当前模型安全审查，再对准确命令请求一次性用户确认；即使保存 Always 也不能跳过确认。默认超时 60 秒、上限 300 秒，保留输出截断、取消、进程树清理、环境变量过滤、工作区协调和部分编辑提示。仅 Host 模式、可写根 Agent 可用。
@@ -37,10 +37,10 @@ npm start
 
 `.github/workflows/release.yml`：
 
-- 推送 `personal/**` 分支：在云端安装依赖、actionlint 校验工作流、严格格式检查、lint、tsgo/worker 类型检查、回归测试。分支提交仅检查；标签或手动触发才构建四个目标。Linux 打包后通过 Playwright/Xvfb 的渲染器 CDP 启动真实正式应用验证窗口、IPC、版本和独立设置目录，不开启 Node 调试安全开关。
-- 推送 `vX.Y.Z-personal.N` 标签：相同检查全部通过后，合并四平台产物、创建草稿 Release、逐个流式上传并核对 GitHub 返回的 SHA256/字节数，完整复核后才公开 Release。package.json/package-lock.json 版本必须与标签一致。
+- 推送 `personal/**` 分支：在云端安装依赖、actionlint 校验工作流、严格格式检查、lint、tsgo/worker 类型检查、回归测试。分支提交仅检查；标签或手动触发才构建 Windows x64。
+- 推送 `vX.Y.Z-personal.N` 标签：相同检查全部通过后，收集 Windows 安装 EXE 和便携 ZIP、创建草稿 Release、逐个流式上传并核对 GitHub 返回的 SHA256/字节数，完整复核后才公开 Release。package.json/package-lock.json 版本必须与标签一致。
 - 可用 workflow_dispatch 手动验证当前 ref；只有标签 ref 才公开发行。仅分支构建不会发布 Release。
-- Windows 使用 windows-2022 x64，Linux 使用 ubuntu-22.04 x64，macOS Intel 使用 macos-26-intel，Apple Silicon 使用 macos-latest arm64。未宣称支持 Windows/Linux ARM，因为上游 AppImage/native 构建尚未覆盖。
+- Windows 使用 windows-2022 x64；自动发行不再调度 Linux 或 macOS 构建。源代码保留上游平台支持与手动 make 能力。
 - 产物名统一包含版本、平台、架构；每个平台附 SHA256SUMS 和源提交 manifest。只发布完整目标集合；已有公开 Release 拒绝覆盖；仅允许恢复本工作流相同源提交创建的草稿，且不覆盖不同资产。
 - Release job 只使用自动提供的 **Actions Secret `GITHUB_TOKEN`**（映射为 `GH_TOKEN`），权限 `contents: write`；无需把本机 PAT 上传到仓库，不把密钥写进源码。构建 job 只有只读权限。没有签名 Secrets 时产物为未签名版。
 - 默认保留本地 make 命令；无需调用官方发布器或配置官方 release 环境。
@@ -48,16 +48,16 @@ npm start
 下一版只需编辑两个 package 文件的版本，提交后打一个新标签并推送：
 
 ```sh
-git tag v1.20.0-personal.2
+git tag v1.20.0-personal.3
 git push origin personal/local-tools
-git push origin v1.20.0-personal.2
+git push origin v1.20.0-personal.3
 ```
 
-示例前提是已将两个版本文件改成 `1.20.0-personal.2`，并提交。不要移动已发布标签。出错会保留未公开草稿，修复代码后应使用新版本；仅网络上传失败可在同一提交上安全重跑。
+示例前提是已将两个版本文件改成 `1.20.0-personal.3`，并提交。不要移动已发布标签。出错会保留未公开草稿，修复代码后应使用新版本；仅网络上传失败可在同一提交上安全重跑。
 
 ## 实际验收记录
 
-实际结果以本仓库 Actions 的 job、测试输出和 Releases 资产为准。未执行本机构建，不将 mock 发布回归测试当成真实远端发布成功。代码中 `scripts/personal-release.test.mjs` 用 fake GitHub 覆盖：精确标签、401、四目标集合、文件校验、草稿恢复、已发布版本保护和标签移动保护。源码测试覆盖独立订阅判断、直连模型、辅助模型、Shell 能力边界和逐次确认。
+实际结果以本仓库 Actions 的 job、测试输出和 Releases 资产为准。未执行本机构建，不将 mock 发布回归测试当成真实远端发布成功。代码中 `scripts/personal-release.test.mjs` 用 fake GitHub 覆盖：精确标签、401、Windows 产物集合、文件校验、草稿恢复、已发布版本保护和标签移动保护。源码测试覆盖独立订阅判断、直连模型、辅助模型、Shell 能力边界和逐次确认。
 
 2026-10-24，首轮四平台完整构建在 [Actions run 39993229641](https://github.com/Self-Command/dyad-personal/actions/runs/39993229641) 全部通过，Linux 正式包成功启动并完成真实渲染器与 IPC 检查；随后新增的首次使用引导、官方账号隔离、Host/Cloud 边界回归也通过云端 verify。最终发行以 `v1.20.0-personal.1` 标签的完整流水线为准。没有调用用户真实模型 API，本期模型调用验证使用自定义 HTTP 假服务及真实 IPC/文件/Git/数据库调用链。原始未修改版没有单独启动验收，不将个人版启动结果冒充原版结果。
 

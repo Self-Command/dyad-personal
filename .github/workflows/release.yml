@@ -114,15 +114,6 @@ jobs:
           - runner: windows-2022
             platform: win32
             arch: x64
-          - runner: ubuntu-22.04
-            platform: linux
-            arch: x64
-          - runner: macos-26-intel
-            platform: darwin
-            arch: x64
-          - runner: macos-latest
-            platform: darwin
-            arch: arm64
     runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
@@ -133,38 +124,12 @@ jobs:
           node-version: 24.13.1
           architecture: ${{ matrix.arch }}
           package-manager-cache: false
-      - name: Linux packaging tools and C++20 compiler
-        if: matrix.platform == 'linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y rpm squashfs-tools
-          sudo install -d -m 0755 /etc/apt/keyrings
-          wget -qO /tmp/llvm-snapshot.gpg.key https://apt.llvm.org/llvm-snapshot.gpg.key
-          gpg --dearmor /tmp/llvm-snapshot.gpg.key
-          sudo install -m 0644 /tmp/llvm-snapshot.gpg.key.gpg /etc/apt/keyrings/apt.llvm.org.gpg
-          echo "deb [signed-by=/etc/apt/keyrings/apt.llvm.org.gpg] https://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main" | sudo tee /etc/apt/sources.list.d/llvm-toolchain-jammy-18.list
-          sudo apt-get update -o Dir::Etc::sourcelist="sources.list.d/llvm-toolchain-jammy-18.list" -o Dir::Etc::sourceparts="-" -o APT::Get::List-Cleanup="0"
-          sudo apt-get install -y clang-18
-          echo "CC=clang-18" >> "$GITHUB_ENV"
-          echo "CXX=clang++-18" >> "$GITHUB_ENV"
       - run: npm install -g npm@11.8.0
       - run: npm ci --no-audit --no-fund
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Compile and make installers (unsigned personal distribution)
         run: npm run make -- --arch=${{ matrix.arch }}
-      - name: Package startup smoke test
-        if: matrix.platform == 'linux'
-        timeout-minutes: 6
-        run: xvfb-run --auto-servernum node scripts/personal-smoke.mjs
-      - name: Upload bounded startup diagnostics
-        if: ${{ always() && matrix.platform == 'linux' }}
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
-        with:
-          name: smoke-diagnostics
-          path: out/smoke-diagnostics/
-          if-no-files-found: ignore
-          retention-days: 3
       - name: Stage versioned assets and SHA256 manifests
         run: node scripts/personal-release.mjs stage
         env:
